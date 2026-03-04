@@ -1,0 +1,938 @@
+{
+  "generated_utc": "2026-03-04T18:31:16+00:00",
+  "sources": [
+    {
+      "oem": "Vestas",
+      "segment": "Onshore",
+      "platform": "Onshore Portfolio",
+      "url": "https://www.vestas.com/en/energy-solutions/onshore-wind-turbines"
+    },
+    {
+      "oem": "Vestas",
+      "segment": "Onshore",
+      "platform": "Enventus Platform",
+      "url": "https://www.vestas.com/en/energy-solutions/onshore-wind-turbines/enventus-platform"
+    },
+    {
+      "oem": "Vestas",
+      "segment": "Onshore",
+      "platform": "4 MW Platform",
+      "url": "https://www.vestas.com/en/energy-solutions/onshore-wind-turbines/4-mw-platform"
+    },
+    {
+      "oem": "Vestas",
+      "segment": "Onshore",
+      "platform": "2 MW Platform",
+      "url": "https://www.vestas.com/en/energy-solutions/onshore-wind-turbines/2-mw-platform"
+    },
+    {
+      "oem": "Vestas",
+      "segment": "Offshore",
+      "platform": "Offshore Portfolio",
+      "url": "https://www.vestas.com/en/energy-solutions/offshore-wind-turbines"
+    },
+    {
+      "oem": "Vestas",
+      "segment": "Offshore",
+      "platform": "V236-15MW",
+      "url": "https://www.vestas.com/en/energy-solutions/offshore-wind-turbines/V236-15MW"
+    },
+    {
+      "oem": "Nordex",
+      "segment": "Onshore",
+      "platform": "Product Portfolio",
+      "url": "https://www.nordex-online.com/en/product/product-main-page/"
+    },
+    {
+      "oem": "Siemens Gamesa",
+      "segment": "Onshore",
+      "platform": "Onshore Portfolio",
+      "url": "https://www.siemensgamesa.com/global/en/home/products-and-services/onshore.html"
+    },
+    {
+      "oem": "Siemens Gamesa",
+      "segment": "Offshore",
+      "platform": "Offshore Portfolio",
+      "url": "https://www.siemensgamesa.com/global/en/home/products-and-services/offshore.html"
+    }
+  ],
+  "failed_sources": [],
+  "models": [
+    {
+      "oem": "Nordex",
+      "model": "N117/3600",
+      "segment": "Onshore",
+      "platform": "Product Portfolio",
+      "rotor_diameter_m": 117.0,
+      "rated_power_mw": 3.6,
+      "power_class": null,
+      "source_urls": [
+        "https://www.nordex-online.com/en/product/product-main-page/"
+      ]
+    },
+    {
+      "oem": "Nordex",
+      "model": "N131",
+      "segment": "Onshore",
+      "platform": "Product Portfolio",
+      "rotor_diameter_m": 131.0,
+      "rated_power_mw": null,
+      "power_class": null,
+      "source_urls": [
+        "https://www.nordex-online.com/en/product/product-main-page/"
+      ]
+    },
+    {
+      "oem": "Nordex",
+      "model": "N131/3600",
+      "segment": "Onshore",
+      "platform": "Product Portfolio",
+      "rotor_diameter_m": 131.0,
+      "rated_power_mw": 3.6,
+      "power_class": null,
+      "source_urls": [
+        "https://www.nordex-online.com/en/product/product-main-page/"
+      ]
+    },
+    {
+      "oem": "Nordex",
+      "model": "N131/3900",
+      "segment": "Onshore",
+      "platform": "Product Portfolio",
+      "rotor_diameter_m": 131.0,
+      "rated_power_mw": 3.9,
+      "power_class": null,
+      "source_urls": [
+        "https://www.nordex-online.com/en/product/product-main-page/"
+      ]
+    },
+    {
+      "oem": "Nordex",
+      "model": "N133/4.8",
+      "segment": "Onshore",
+      "platform": "Product Portfolio",
+      "rotor_diameter_m": 133.0,
+      "rated_power_mw": 4.8,
+      "power_class": null,
+      "source_urls": [
+        "https://www.nordex-online.com/en/product/product-main-page/"
+      ]
+    },
+    {
+      "oem": "Nordex",
+      "model": "N149/4.0",
+      "segment": "Onshore",
+      "platform": "Product Portfolio",
+      "rotor_diameter_m": 149.0,
+      "rated_power_mw": 4.0,
+      "power_class": null,
+      "source_urls": [
+        "https://www.nordex-online.com/en/product/product-main-page/"
+      ]
+    },
+    {
+      "oem": "Nordex",
+      "model": "N149/4.X",
+      "segment": "Onshore",
+      "platform": "Product Portfolio",
+      "rotor_diameter_m": 149.0,
+      "rated_power_mw": 4.0,
+      "power_class": "4.X",
+      "source_urls": [
+        "https://www.nordex-online.com/en/product/product-main-page/"
+      ]
+    },
+    {
+      "oem": "Nordex",
+      "model": "N149/5.X",
+      "segment": "Onshore",
+      "platform": "Product Portfolio",
+      "rotor_diameter_m": 149.0,
+      "rated_power_mw": 5.0,
+      "power_class": "5.X",
+      "source_urls": [
+        "https://www.nordex-online.com/en/product/product-main-page/"
+      ]
+    },
+    {
+      "oem": "Nordex",
+      "model": "N163/5.X",
+      "segment": "Onshore",
+      "platform": "Product Portfolio",
+      "rotor_diameter_m": 163.0,
+      "rated_power_mw": 5.0,
+      "power_class": "5.X",
+      "source_urls": [
+        "https://www.nordex-online.com/en/product/product-main-page/"
+      ]
+    },
+    {
+      "oem": "Nordex",
+      "model": "N163/6.X",
+      "segment": "Onshore",
+      "platform": "Product Portfolio",
+      "rotor_diameter_m": 163.0,
+      "rated_power_mw": 6.0,
+      "power_class": "6.X",
+      "source_urls": [
+        "https://www.nordex-online.com/en/product/product-main-page/"
+      ]
+    },
+    {
+      "oem": "Nordex",
+      "model": "N169/5.X",
+      "segment": "Onshore",
+      "platform": "Product Portfolio",
+      "rotor_diameter_m": 169.0,
+      "rated_power_mw": 5.0,
+      "power_class": "5.X",
+      "source_urls": [
+        "https://www.nordex-online.com/en/product/product-main-page/"
+      ]
+    },
+    {
+      "oem": "Nordex",
+      "model": "N175/6.X",
+      "segment": "Onshore",
+      "platform": "Product Portfolio",
+      "rotor_diameter_m": 175.0,
+      "rated_power_mw": 6.0,
+      "power_class": "6.X",
+      "source_urls": [
+        "https://www.nordex-online.com/en/product/product-main-page/"
+      ]
+    },
+    {
+      "oem": "Siemens Gamesa",
+      "model": "SG 8.0-167",
+      "segment": "Offshore",
+      "platform": "Offshore Portfolio",
+      "rotor_diameter_m": 167.0,
+      "rated_power_mw": 8.0,
+      "power_class": null,
+      "source_urls": [
+        "https://www.siemensgamesa.com/global/en/home/products-and-services/offshore.html"
+      ]
+    },
+    {
+      "oem": "Siemens Gamesa",
+      "model": "SG 11.0-200",
+      "segment": "Offshore",
+      "platform": "Offshore Portfolio",
+      "rotor_diameter_m": 200.0,
+      "rated_power_mw": 11.0,
+      "power_class": null,
+      "source_urls": [
+        "https://www.siemensgamesa.com/global/en/home/products-and-services/offshore.html"
+      ]
+    },
+    {
+      "oem": "Siemens Gamesa",
+      "model": "SG 14.0-222",
+      "segment": "Offshore",
+      "platform": "Offshore Portfolio",
+      "rotor_diameter_m": 222.0,
+      "rated_power_mw": 14.0,
+      "power_class": null,
+      "source_urls": [
+        "https://www.siemensgamesa.com/global/en/home/products-and-services/offshore.html"
+      ]
+    },
+    {
+      "oem": "Siemens Gamesa",
+      "model": "SG 14.0-236",
+      "segment": "Offshore",
+      "platform": "Offshore Portfolio",
+      "rotor_diameter_m": 236.0,
+      "rated_power_mw": 14.0,
+      "power_class": null,
+      "source_urls": [
+        "https://www.siemensgamesa.com/global/en/home/products-and-services/offshore.html"
+      ]
+    },
+    {
+      "oem": "Siemens Gamesa",
+      "model": "SG 15.0-236",
+      "segment": "Offshore",
+      "platform": "Offshore Portfolio",
+      "rotor_diameter_m": 236.0,
+      "rated_power_mw": 15.0,
+      "power_class": null,
+      "source_urls": [
+        "https://www.siemensgamesa.com/global/en/home/products-and-services/offshore.html"
+      ]
+    },
+    {
+      "oem": "Siemens Gamesa",
+      "model": "SG 2.6-114",
+      "segment": "Onshore",
+      "platform": "Onshore Portfolio",
+      "rotor_diameter_m": 114.0,
+      "rated_power_mw": 2.6,
+      "power_class": null,
+      "source_urls": [
+        "https://www.siemensgamesa.com/global/en/home/products-and-services/onshore.html"
+      ]
+    },
+    {
+      "oem": "Siemens Gamesa",
+      "model": "SG 4.3-120",
+      "segment": "Onshore",
+      "platform": "Onshore Portfolio",
+      "rotor_diameter_m": 120.0,
+      "rated_power_mw": 4.3,
+      "power_class": null,
+      "source_urls": [
+        "https://www.siemensgamesa.com/global/en/home/products-and-services/onshore.html"
+      ]
+    },
+    {
+      "oem": "Siemens Gamesa",
+      "model": "SG 2.9-129",
+      "segment": "Onshore",
+      "platform": "Onshore Portfolio",
+      "rotor_diameter_m": 129.0,
+      "rated_power_mw": 2.9,
+      "power_class": null,
+      "source_urls": [
+        "https://www.siemensgamesa.com/global/en/home/products-and-services/onshore.html"
+      ]
+    },
+    {
+      "oem": "Siemens Gamesa",
+      "model": "SG 3.2-129",
+      "segment": "Onshore",
+      "platform": "Onshore Portfolio",
+      "rotor_diameter_m": 129.0,
+      "rated_power_mw": 3.2,
+      "power_class": null,
+      "source_urls": [
+        "https://www.siemensgamesa.com/global/en/home/products-and-services/onshore.html"
+      ]
+    },
+    {
+      "oem": "Siemens Gamesa",
+      "model": "SG 4.3-130",
+      "segment": "Onshore",
+      "platform": "Onshore Portfolio",
+      "rotor_diameter_m": 130.0,
+      "rated_power_mw": 4.3,
+      "power_class": null,
+      "source_urls": [
+        "https://www.siemensgamesa.com/global/en/home/products-and-services/onshore.html"
+      ]
+    },
+    {
+      "oem": "Siemens Gamesa",
+      "model": "SG 3.4-132",
+      "segment": "Onshore",
+      "platform": "Onshore Portfolio",
+      "rotor_diameter_m": 132.0,
+      "rated_power_mw": 3.4,
+      "power_class": null,
+      "source_urls": [
+        "https://www.siemensgamesa.com/global/en/home/products-and-services/onshore.html"
+      ]
+    },
+    {
+      "oem": "Siemens Gamesa",
+      "model": "SG 5.0-132",
+      "segment": "Onshore",
+      "platform": "Onshore Portfolio",
+      "rotor_diameter_m": 132.0,
+      "rated_power_mw": 5.0,
+      "power_class": null,
+      "source_urls": [
+        "https://www.siemensgamesa.com/global/en/home/products-and-services/onshore.html"
+      ]
+    },
+    {
+      "oem": "Siemens Gamesa",
+      "model": "SG 4.3-140",
+      "segment": "Onshore",
+      "platform": "Onshore Portfolio",
+      "rotor_diameter_m": 140.0,
+      "rated_power_mw": 4.3,
+      "power_class": null,
+      "source_urls": [
+        "https://www.siemensgamesa.com/global/en/home/products-and-services/onshore.html"
+      ]
+    },
+    {
+      "oem": "Siemens Gamesa",
+      "model": "SG 3.4-145",
+      "segment": "Onshore",
+      "platform": "Onshore Portfolio",
+      "rotor_diameter_m": 145.0,
+      "rated_power_mw": 3.4,
+      "power_class": null,
+      "source_urls": [
+        "https://www.siemensgamesa.com/global/en/home/products-and-services/onshore.html"
+      ]
+    },
+    {
+      "oem": "Siemens Gamesa",
+      "model": "SG 5.0-145",
+      "segment": "Onshore",
+      "platform": "Onshore Portfolio",
+      "rotor_diameter_m": 145.0,
+      "rated_power_mw": 5.0,
+      "power_class": null,
+      "source_urls": [
+        "https://www.siemensgamesa.com/global/en/home/products-and-services/onshore.html"
+      ]
+    },
+    {
+      "oem": "Siemens Gamesa",
+      "model": "SG 4.4-164",
+      "segment": "Onshore",
+      "platform": "Onshore Portfolio",
+      "rotor_diameter_m": 164.0,
+      "rated_power_mw": 4.4,
+      "power_class": null,
+      "source_urls": [
+        "https://www.siemensgamesa.com/global/en/home/products-and-services/onshore.html"
+      ]
+    },
+    {
+      "oem": "Siemens Gamesa",
+      "model": "SG 5.2-165",
+      "segment": "Onshore",
+      "platform": "Onshore Portfolio",
+      "rotor_diameter_m": 165.0,
+      "rated_power_mw": 5.2,
+      "power_class": null,
+      "source_urls": [
+        "https://www.siemensgamesa.com/global/en/home/products-and-services/onshore.html"
+      ]
+    },
+    {
+      "oem": "Siemens Gamesa",
+      "model": "SG 7.0-170",
+      "segment": "Onshore",
+      "platform": "Onshore Portfolio",
+      "rotor_diameter_m": 170.0,
+      "rated_power_mw": 7.0,
+      "power_class": null,
+      "source_urls": [
+        "https://www.siemensgamesa.com/global/en/home/products-and-services/onshore.html"
+      ]
+    },
+    {
+      "oem": "Vestas",
+      "model": "V66-2.0",
+      "segment": "Offshore",
+      "platform": "Offshore Portfolio",
+      "rotor_diameter_m": 66.0,
+      "rated_power_mw": 2.0,
+      "power_class": null,
+      "source_urls": [
+        "https://www.vestas.com/en/energy-solutions/offshore-wind-turbines"
+      ]
+    },
+    {
+      "oem": "Vestas",
+      "model": "V80-2.0",
+      "segment": "Offshore",
+      "platform": "Offshore Portfolio",
+      "rotor_diameter_m": 80.0,
+      "rated_power_mw": 2.0,
+      "power_class": null,
+      "source_urls": [
+        "https://www.vestas.com/en/energy-solutions/offshore-wind-turbines"
+      ]
+    },
+    {
+      "oem": "Vestas",
+      "model": "V90-3.0",
+      "segment": "Offshore",
+      "platform": "Offshore Portfolio",
+      "rotor_diameter_m": 90.0,
+      "rated_power_mw": 3.0,
+      "power_class": null,
+      "source_urls": [
+        "https://www.vestas.com/en/energy-solutions/offshore-wind-turbines"
+      ]
+    },
+    {
+      "oem": "Vestas",
+      "model": "V112-3.0",
+      "segment": "Offshore",
+      "platform": "Offshore Portfolio",
+      "rotor_diameter_m": 112.0,
+      "rated_power_mw": 3.0,
+      "power_class": null,
+      "source_urls": [
+        "https://www.vestas.com/en/energy-solutions/offshore-wind-turbines"
+      ]
+    },
+    {
+      "oem": "Vestas",
+      "model": "V112-3.3",
+      "segment": "Offshore",
+      "platform": "Offshore Portfolio",
+      "rotor_diameter_m": 112.0,
+      "rated_power_mw": 3.3,
+      "power_class": null,
+      "source_urls": [
+        "https://www.vestas.com/en/energy-solutions/offshore-wind-turbines"
+      ]
+    },
+    {
+      "oem": "Vestas",
+      "model": "V112-3.45",
+      "segment": "Offshore",
+      "platform": "Offshore Portfolio",
+      "rotor_diameter_m": 112.0,
+      "rated_power_mw": 3.45,
+      "power_class": null,
+      "source_urls": [
+        "https://www.vestas.com/en/energy-solutions/offshore-wind-turbines"
+      ]
+    },
+    {
+      "oem": "Vestas",
+      "model": "V164-10.0",
+      "segment": "Offshore",
+      "platform": "Offshore Portfolio",
+      "rotor_diameter_m": 164.0,
+      "rated_power_mw": 10.0,
+      "power_class": null,
+      "source_urls": [
+        "https://www.vestas.com/en/energy-solutions/offshore-wind-turbines"
+      ]
+    },
+    {
+      "oem": "Vestas",
+      "model": "V164-8.0",
+      "segment": "Offshore",
+      "platform": "Offshore Portfolio",
+      "rotor_diameter_m": 164.0,
+      "rated_power_mw": 8.0,
+      "power_class": null,
+      "source_urls": [
+        "https://www.vestas.com/en/energy-solutions/offshore-wind-turbines"
+      ]
+    },
+    {
+      "oem": "Vestas",
+      "model": "V164-8.3",
+      "segment": "Offshore",
+      "platform": "Offshore Portfolio",
+      "rotor_diameter_m": 164.0,
+      "rated_power_mw": 8.3,
+      "power_class": null,
+      "source_urls": [
+        "https://www.vestas.com/en/energy-solutions/offshore-wind-turbines"
+      ]
+    },
+    {
+      "oem": "Vestas",
+      "model": "V164-8.4",
+      "segment": "Offshore",
+      "platform": "Offshore Portfolio",
+      "rotor_diameter_m": 164.0,
+      "rated_power_mw": 8.4,
+      "power_class": null,
+      "source_urls": [
+        "https://www.vestas.com/en/energy-solutions/offshore-wind-turbines"
+      ]
+    },
+    {
+      "oem": "Vestas",
+      "model": "V164-9.5",
+      "segment": "Offshore",
+      "platform": "Offshore Portfolio",
+      "rotor_diameter_m": 164.0,
+      "rated_power_mw": 9.5,
+      "power_class": null,
+      "source_urls": [
+        "https://www.vestas.com/en/energy-solutions/offshore-wind-turbines"
+      ]
+    },
+    {
+      "oem": "Vestas",
+      "model": "V174-9.0",
+      "segment": "Offshore",
+      "platform": "Offshore Portfolio",
+      "rotor_diameter_m": 174.0,
+      "rated_power_mw": 9.0,
+      "power_class": null,
+      "source_urls": [
+        "https://www.vestas.com/en/energy-solutions/offshore-wind-turbines"
+      ]
+    },
+    {
+      "oem": "Vestas",
+      "model": "V174-9.5",
+      "segment": "Offshore",
+      "platform": "Offshore Portfolio",
+      "rotor_diameter_m": 174.0,
+      "rated_power_mw": 9.5,
+      "power_class": null,
+      "source_urls": [
+        "https://www.vestas.com/en/energy-solutions/offshore-wind-turbines"
+      ]
+    },
+    {
+      "oem": "Vestas",
+      "model": "V236-15.0",
+      "segment": "Offshore",
+      "platform": "Offshore Portfolio, V236-15MW",
+      "rotor_diameter_m": 236.0,
+      "rated_power_mw": 15.0,
+      "power_class": null,
+      "source_urls": [
+        "https://www.vestas.com/en/energy-solutions/offshore-wind-turbines",
+        "https://www.vestas.com/en/energy-solutions/offshore-wind-turbines/V236-15MW"
+      ]
+    },
+    {
+      "oem": "Vestas",
+      "model": "V80-1.8",
+      "segment": "Onshore",
+      "platform": "Onshore Portfolio",
+      "rotor_diameter_m": 80.0,
+      "rated_power_mw": 1.8,
+      "power_class": null,
+      "source_urls": [
+        "https://www.vestas.com/en/energy-solutions/onshore-wind-turbines"
+      ]
+    },
+    {
+      "oem": "Vestas",
+      "model": "V110-2.0",
+      "segment": "Onshore",
+      "platform": "Onshore Portfolio, 2 MW Platform",
+      "rotor_diameter_m": 110.0,
+      "rated_power_mw": 2.0,
+      "power_class": null,
+      "source_urls": [
+        "https://www.vestas.com/en/energy-solutions/onshore-wind-turbines",
+        "https://www.vestas.com/en/energy-solutions/onshore-wind-turbines/2-mw-platform"
+      ]
+    },
+    {
+      "oem": "Vestas",
+      "model": "V117-3.0",
+      "segment": "Onshore",
+      "platform": "4 MW Platform",
+      "rotor_diameter_m": 117.0,
+      "rated_power_mw": 3.0,
+      "power_class": null,
+      "source_urls": [
+        "https://www.vestas.com/en/energy-solutions/onshore-wind-turbines/4-mw-platform"
+      ]
+    },
+    {
+      "oem": "Vestas",
+      "model": "V117-3.45",
+      "segment": "Onshore",
+      "platform": "Onshore Portfolio, 4 MW Platform",
+      "rotor_diameter_m": 117.0,
+      "rated_power_mw": 3.45,
+      "power_class": null,
+      "source_urls": [
+        "https://www.vestas.com/en/energy-solutions/onshore-wind-turbines",
+        "https://www.vestas.com/en/energy-solutions/onshore-wind-turbines/4-mw-platform"
+      ]
+    },
+    {
+      "oem": "Vestas",
+      "model": "V117-4.0",
+      "segment": "Onshore",
+      "platform": "Onshore Portfolio, 4 MW Platform",
+      "rotor_diameter_m": 117.0,
+      "rated_power_mw": 4.0,
+      "power_class": null,
+      "source_urls": [
+        "https://www.vestas.com/en/energy-solutions/onshore-wind-turbines",
+        "https://www.vestas.com/en/energy-solutions/onshore-wind-turbines/4-mw-platform"
+      ]
+    },
+    {
+      "oem": "Vestas",
+      "model": "V120-2.0",
+      "segment": "Onshore",
+      "platform": "2 MW Platform",
+      "rotor_diameter_m": 120.0,
+      "rated_power_mw": 2.0,
+      "power_class": null,
+      "source_urls": [
+        "https://www.vestas.com/en/energy-solutions/onshore-wind-turbines/2-mw-platform"
+      ]
+    },
+    {
+      "oem": "Vestas",
+      "model": "V120-2.2",
+      "segment": "Onshore",
+      "platform": "2 MW Platform",
+      "rotor_diameter_m": 120.0,
+      "rated_power_mw": 2.2,
+      "power_class": null,
+      "source_urls": [
+        "https://www.vestas.com/en/energy-solutions/onshore-wind-turbines/2-mw-platform"
+      ]
+    },
+    {
+      "oem": "Vestas",
+      "model": "V126-3.0",
+      "segment": "Onshore",
+      "platform": "4 MW Platform",
+      "rotor_diameter_m": 126.0,
+      "rated_power_mw": 3.0,
+      "power_class": null,
+      "source_urls": [
+        "https://www.vestas.com/en/energy-solutions/onshore-wind-turbines/4-mw-platform"
+      ]
+    },
+    {
+      "oem": "Vestas",
+      "model": "V126-3.45",
+      "segment": "Onshore",
+      "platform": "Onshore Portfolio, 4 MW Platform",
+      "rotor_diameter_m": 126.0,
+      "rated_power_mw": 3.45,
+      "power_class": null,
+      "source_urls": [
+        "https://www.vestas.com/en/energy-solutions/onshore-wind-turbines",
+        "https://www.vestas.com/en/energy-solutions/onshore-wind-turbines/4-mw-platform"
+      ]
+    },
+    {
+      "oem": "Vestas",
+      "model": "V136-3.0",
+      "segment": "Onshore",
+      "platform": "4 MW Platform",
+      "rotor_diameter_m": 136.0,
+      "rated_power_mw": 3.0,
+      "power_class": null,
+      "source_urls": [
+        "https://www.vestas.com/en/energy-solutions/onshore-wind-turbines/4-mw-platform"
+      ]
+    },
+    {
+      "oem": "Vestas",
+      "model": "V136-3.45",
+      "segment": "Onshore",
+      "platform": "4 MW Platform",
+      "rotor_diameter_m": 136.0,
+      "rated_power_mw": 3.45,
+      "power_class": null,
+      "source_urls": [
+        "https://www.vestas.com/en/energy-solutions/onshore-wind-turbines/4-mw-platform"
+      ]
+    },
+    {
+      "oem": "Vestas",
+      "model": "V136-4.0",
+      "segment": "Onshore",
+      "platform": "4 MW Platform",
+      "rotor_diameter_m": 136.0,
+      "rated_power_mw": 4.0,
+      "power_class": null,
+      "source_urls": [
+        "https://www.vestas.com/en/energy-solutions/onshore-wind-turbines/4-mw-platform"
+      ]
+    },
+    {
+      "oem": "Vestas",
+      "model": "V136-4.2",
+      "segment": "Onshore",
+      "platform": "4 MW Platform",
+      "rotor_diameter_m": 136.0,
+      "rated_power_mw": 4.2,
+      "power_class": null,
+      "source_urls": [
+        "https://www.vestas.com/en/energy-solutions/onshore-wind-turbines/4-mw-platform"
+      ]
+    },
+    {
+      "oem": "Vestas",
+      "model": "V136-4.5",
+      "segment": "Onshore",
+      "platform": "4 MW Platform",
+      "rotor_diameter_m": 136.0,
+      "rated_power_mw": 4.5,
+      "power_class": null,
+      "source_urls": [
+        "https://www.vestas.com/en/energy-solutions/onshore-wind-turbines/4-mw-platform"
+      ]
+    },
+    {
+      "oem": "Vestas",
+      "model": "V150-4.0",
+      "segment": "Onshore",
+      "platform": "Onshore Portfolio, Enventus Platform, 4 MW Platform",
+      "rotor_diameter_m": 150.0,
+      "rated_power_mw": 4.0,
+      "power_class": null,
+      "source_urls": [
+        "https://www.vestas.com/en/energy-solutions/onshore-wind-turbines",
+        "https://www.vestas.com/en/energy-solutions/onshore-wind-turbines/enventus-platform",
+        "https://www.vestas.com/en/energy-solutions/onshore-wind-turbines/4-mw-platform"
+      ]
+    },
+    {
+      "oem": "Vestas",
+      "model": "V150-4.2",
+      "segment": "Onshore",
+      "platform": "Onshore Portfolio, Enventus Platform, 4 MW Platform",
+      "rotor_diameter_m": 150.0,
+      "rated_power_mw": 4.2,
+      "power_class": null,
+      "source_urls": [
+        "https://www.vestas.com/en/energy-solutions/onshore-wind-turbines",
+        "https://www.vestas.com/en/energy-solutions/onshore-wind-turbines/enventus-platform",
+        "https://www.vestas.com/en/energy-solutions/onshore-wind-turbines/4-mw-platform"
+      ]
+    },
+    {
+      "oem": "Vestas",
+      "model": "V150-4.3",
+      "segment": "Onshore",
+      "platform": "4 MW Platform",
+      "rotor_diameter_m": 150.0,
+      "rated_power_mw": 4.3,
+      "power_class": null,
+      "source_urls": [
+        "https://www.vestas.com/en/energy-solutions/onshore-wind-turbines/4-mw-platform"
+      ]
+    },
+    {
+      "oem": "Vestas",
+      "model": "V150-4.5",
+      "segment": "Onshore",
+      "platform": "4 MW Platform",
+      "rotor_diameter_m": 150.0,
+      "rated_power_mw": 4.5,
+      "power_class": null,
+      "source_urls": [
+        "https://www.vestas.com/en/energy-solutions/onshore-wind-turbines/4-mw-platform"
+      ]
+    },
+    {
+      "oem": "Vestas",
+      "model": "V150-6.0",
+      "segment": "Onshore",
+      "platform": "Enventus Platform",
+      "rotor_diameter_m": 150.0,
+      "rated_power_mw": 6.0,
+      "power_class": null,
+      "source_urls": [
+        "https://www.vestas.com/en/energy-solutions/onshore-wind-turbines/enventus-platform"
+      ]
+    },
+    {
+      "oem": "Vestas",
+      "model": "V162-6.0",
+      "segment": "Onshore",
+      "platform": "Enventus Platform",
+      "rotor_diameter_m": 162.0,
+      "rated_power_mw": 6.0,
+      "power_class": null,
+      "source_urls": [
+        "https://www.vestas.com/en/energy-solutions/onshore-wind-turbines/enventus-platform"
+      ]
+    },
+    {
+      "oem": "Vestas",
+      "model": "V162-6.2",
+      "segment": "Onshore",
+      "platform": "Enventus Platform",
+      "rotor_diameter_m": 162.0,
+      "rated_power_mw": 6.2,
+      "power_class": null,
+      "source_urls": [
+        "https://www.vestas.com/en/energy-solutions/onshore-wind-turbines/enventus-platform"
+      ]
+    },
+    {
+      "oem": "Vestas",
+      "model": "V162-7.0",
+      "segment": "Onshore",
+      "platform": "Enventus Platform",
+      "rotor_diameter_m": 162.0,
+      "rated_power_mw": 7.0,
+      "power_class": null,
+      "source_urls": [
+        "https://www.vestas.com/en/energy-solutions/onshore-wind-turbines/enventus-platform"
+      ]
+    },
+    {
+      "oem": "Vestas",
+      "model": "V162-7.2",
+      "segment": "Onshore",
+      "platform": "Onshore Portfolio, Enventus Platform",
+      "rotor_diameter_m": 162.0,
+      "rated_power_mw": 7.2,
+      "power_class": null,
+      "source_urls": [
+        "https://www.vestas.com/en/energy-solutions/onshore-wind-turbines",
+        "https://www.vestas.com/en/energy-solutions/onshore-wind-turbines/enventus-platform"
+      ]
+    },
+    {
+      "oem": "Vestas",
+      "model": "V163-4.0",
+      "segment": "Onshore",
+      "platform": "4 MW Platform",
+      "rotor_diameter_m": 163.0,
+      "rated_power_mw": 4.0,
+      "power_class": null,
+      "source_urls": [
+        "https://www.vestas.com/en/energy-solutions/onshore-wind-turbines/4-mw-platform"
+      ]
+    },
+    {
+      "oem": "Vestas",
+      "model": "V163-4.5",
+      "segment": "Onshore",
+      "platform": "4 MW Platform",
+      "rotor_diameter_m": 163.0,
+      "rated_power_mw": 4.5,
+      "power_class": null,
+      "source_urls": [
+        "https://www.vestas.com/en/energy-solutions/onshore-wind-turbines/4-mw-platform"
+      ]
+    },
+    {
+      "oem": "Vestas",
+      "model": "V172-7.0",
+      "segment": "Onshore",
+      "platform": "Onshore Portfolio, Enventus Platform",
+      "rotor_diameter_m": 172.0,
+      "rated_power_mw": 7.0,
+      "power_class": null,
+      "source_urls": [
+        "https://www.vestas.com/en/energy-solutions/onshore-wind-turbines",
+        "https://www.vestas.com/en/energy-solutions/onshore-wind-turbines/enventus-platform"
+      ]
+    },
+    {
+      "oem": "Vestas",
+      "model": "V172-7.2",
+      "segment": "Onshore",
+      "platform": "Enventus Platform",
+      "rotor_diameter_m": 172.0,
+      "rated_power_mw": 7.2,
+      "power_class": null,
+      "source_urls": [
+        "https://www.vestas.com/en/energy-solutions/onshore-wind-turbines/enventus-platform"
+      ]
+    },
+    {
+      "oem": "Vestas",
+      "model": "V117-4.2",
+      "segment": "Onshore, Offshore",
+      "platform": "4 MW Platform, Offshore Portfolio",
+      "rotor_diameter_m": 117.0,
+      "rated_power_mw": 4.2,
+      "power_class": null,
+      "source_urls": [
+        "https://www.vestas.com/en/energy-solutions/onshore-wind-turbines/4-mw-platform",
+        "https://www.vestas.com/en/energy-solutions/offshore-wind-turbines"
+      ]
+    }
+  ]
+}
