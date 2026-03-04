@@ -22,7 +22,12 @@ Combined Streamlit dashboard comparing Vestas, Nordex, and Siemens Gamesa.
   - Model table with source links.
 
 ## Data Inputs
-The app reads parsed cache files from sibling projects:
+Primary cache files (included in this repo for deployment):
+- `data_cache/vestas_parsed_data.pkl`
+- `data_cache/nordex_parsed_data.pkl`
+- `data_cache/sgre_parsed_data.pkl`
+
+Local fallback (for developer workflow):
 - `../Vestas_sales/data_cache/vestas_parsed_data.pkl`
 - `../nordex_sales/data_cache/nordex_parsed_data.pkl`
 - `../SGRE_sales/data_cache/sgre_parsed_data.pkl`
@@ -56,3 +61,4 @@ If using a local virtual environment:
 - The dashboard shows the latest handled date/year from loaded datasets.
 - Economics metrics are mapped by metric-name heuristics; units are normalized where possible.
 - If one OEM does not report a metric in the same way, that series is omitted for that OEM.
+- For Streamlit Community Cloud, keep the three `data_cache/*.pkl` files committed in this repository.

@@ -15,10 +15,19 @@ APP_TITLE = "Wind Turbine OEM Benchmark Dashboard"
 APP_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = APP_DIR.parent
 
-OEM_CACHE_FILES = {
-    "Vestas": PROJECT_ROOT / "Vestas_sales" / "data_cache" / "vestas_parsed_data.pkl",
-    "Nordex": PROJECT_ROOT / "nordex_sales" / "data_cache" / "nordex_parsed_data.pkl",
-    "Siemens Gamesa": PROJECT_ROOT / "SGRE_sales" / "data_cache" / "sgre_parsed_data.pkl",
+OEM_CACHE_PATH_CANDIDATES = {
+    "Vestas": [
+        APP_DIR / "data_cache" / "vestas_parsed_data.pkl",
+        PROJECT_ROOT / "Vestas_sales" / "data_cache" / "vestas_parsed_data.pkl",
+    ],
+    "Nordex": [
+        APP_DIR / "data_cache" / "nordex_parsed_data.pkl",
+        PROJECT_ROOT / "nordex_sales" / "data_cache" / "nordex_parsed_data.pkl",
+    ],
+    "Siemens Gamesa": [
+        APP_DIR / "data_cache" / "sgre_parsed_data.pkl",
+        PROJECT_ROOT / "SGRE_sales" / "data_cache" / "sgre_parsed_data.pkl",
+    ],
 }
 
 TURBINE_CATALOG_FILE = APP_DIR / "data" / "oem_turbine_catalog.json"
@@ -325,14 +334,27 @@ def file_signature(path: Path) -> str:
     return f"{path.resolve()}::{stat.st_mtime_ns}::{stat.st_size}"
 
 
+def resolve_oem_cache_files() -> dict[str, Path]:
+    resolved: dict[str, Path] = {}
+    for oem, candidates in OEM_CACHE_PATH_CANDIDATES.items():
+        found = None
+        for path in candidates:
+            if path.exists():
+                found = path
+                break
+        resolved[oem] = found if found is not None else candidates[0]
+    return resolved
+
+
 @st.cache_data(show_spinner=False)
-def load_all_oem_data(_signature: str) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, list[str]]:
+def load_all_oem_data(_signature: str, cache_paths: dict[str, str]) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, list[str]]:
     economy_frames: list[pd.DataFrame] = []
     order_frames: list[pd.DataFrame] = []
     platform_frames: list[pd.DataFrame] = []
     issues: list[str] = []
 
-    for oem, path in OEM_CACHE_FILES.items():
+    for oem, path_txt in cache_paths.items():
+        path = Path(path_txt)
         if not path.exists():
             issues.append(f"Missing cache for {oem}: `{path}`")
             continue
@@ -1234,8 +1256,10 @@ def main() -> None:
     dark_mode = bool(st.session_state.get("dark_mode", False))
     apply_page_style(dark_mode)
 
-    signature = "|".join(file_signature(path) for path in OEM_CACHE_FILES.values())
-    economy_all, orders_all, platforms_all, issues = load_all_oem_data(signature)
+    cache_paths = resolve_oem_cache_files()
+    signature = "|".join(file_signature(path) for path in cache_paths.values())
+    cache_paths_txt = {oem: str(path) for oem, path in cache_paths.items()}
+    economy_all, orders_all, platforms_all, issues = load_all_oem_data(signature, cache_paths_txt)
 
     catalog_signature = file_signature(TURBINE_CATALOG_FILE)
     turbine_catalog, catalog_generated, failed_sources = load_turbine_catalog(catalog_signature)
