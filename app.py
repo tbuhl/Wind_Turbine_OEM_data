@@ -28,6 +28,10 @@ OEM_CACHE_PATH_CANDIDATES = {
         APP_DIR / "data_cache" / "sgre_parsed_data.pkl",
         PROJECT_ROOT / "SGRE_sales" / "data_cache" / "sgre_parsed_data.pkl",
     ],
+    "Suzlon": [
+        APP_DIR / "data_cache" / "suzlon_parsed_data.pkl",
+        PROJECT_ROOT / "Suzlon_sales" / "data_cache" / "suzlon_parsed_data.pkl",
+    ],
 }
 
 TURBINE_CATALOG_FILE = APP_DIR / "data" / "oem_turbine_catalog.json"
@@ -35,7 +39,8 @@ TURBINE_CATALOG_FILE = APP_DIR / "data" / "oem_turbine_catalog.json"
 OEM_COLORS = {
     "Vestas": "#2F8FCE",
     "Nordex": "#F18F01",
-    "Siemens Gamesa": "#3A5A40",
+    "Siemens Gamesa": "#5E8F49",
+    "Suzlon": "#D1495B",
 }
 
 
@@ -220,6 +225,16 @@ section[data-testid="stSidebar"] div[data-testid="stTextInput"] input:focus {{
   box-shadow: 0 0 0 2px {input_focus} !important;
 }}
 
+section[data-testid="stSidebar"] div[data-testid="stLinkButton"] > a,
+section[data-testid="stSidebar"] .stLinkButton > a {{
+  width: calc(100% - 0.5rem) !important;
+  margin: 0.2rem 0.25rem !important;
+  justify-content: center !important;
+  text-align: center !important;
+  border-radius: 0.65rem !important;
+  font-weight: 700 !important;
+}}
+
 div[data-testid="stAlert"],
 div[data-testid="stDataFrame"] {{
   background: radial-gradient(65% 80% at 50% 0%, {card_glow} 0%, rgba(255,255,255,0) 100%), {card_bg};
@@ -296,6 +311,25 @@ div[data-testid="stPlotlyChart"] {{
 .small-note {{
   color: {muted_color} !important;
 }}
+
+.freshness-wrap {{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin: 0.2rem 0 0.55rem 0;
+}}
+
+.freshness-badge {{
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.32rem 0.58rem;
+  border-radius: 999px;
+  border: 1px solid {frame_border};
+  font-size: 0.78rem;
+  line-height: 1.15;
+  white-space: nowrap;
+}}
 </style>
         """,
         unsafe_allow_html=True,
@@ -344,6 +378,19 @@ def resolve_oem_cache_files() -> dict[str, Path]:
                 break
         resolved[oem] = found if found is not None else candidates[0]
     return resolved
+
+
+def hex_to_rgba(hex_color: str, alpha: float) -> str:
+    color = str(hex_color).strip().lstrip("#")
+    if len(color) != 6:
+        return f"rgba(100,116,139,{alpha})"
+    try:
+        r = int(color[0:2], 16)
+        g = int(color[2:4], 16)
+        b = int(color[4:6], 16)
+    except ValueError:
+        return f"rgba(100,116,139,{alpha})"
+    return f"rgba({r},{g},{b},{alpha})"
 
 
 @st.cache_data(show_spinner=False)
@@ -459,6 +506,76 @@ def load_all_oem_data(_signature: str, cache_paths: dict[str, str]) -> tuple[pd.
 
 
 @st.cache_data(show_spinner=False)
+def load_cache_freshness(_signature: str, cache_paths: dict[str, str]) -> pd.DataFrame:
+    rows: list[dict[str, Any]] = []
+    for oem, path_txt in cache_paths.items():
+        path = Path(path_txt)
+        row: dict[str, Any] = {
+            "oem": oem,
+            "cache_generated_utc": pd.NaT,
+            "latest_order_date": pd.NaT,
+            "latest_order_year": np.nan,
+            "file_modified_local": pd.NaT,
+            "source_location": "repo" if APP_DIR in path.parents else "external",
+        }
+        if path.exists():
+            row["file_modified_local"] = pd.to_datetime(path.stat().st_mtime, unit="s", errors="coerce")
+            try:
+                payload = pd.read_pickle(path)
+                if isinstance(payload, dict):
+                    row["cache_generated_utc"] = pd.to_datetime(payload.get("generated_utc"), errors="coerce", utc=True)
+                    orders = payload.get("orders")
+                    if isinstance(orders, pd.DataFrame) and not orders.empty:
+                        order_dates = pd.to_datetime(orders.get("order_date"), errors="coerce")
+                        if not order_dates.dropna().empty:
+                            row["latest_order_date"] = order_dates.max()
+                        order_year = pd.to_numeric(orders.get("order_year"), errors="coerce")
+                        if not order_year.dropna().empty:
+                            row["latest_order_year"] = float(order_year.max())
+            except Exception:
+                pass
+        rows.append(row)
+    return pd.DataFrame(rows)
+
+
+def render_data_freshness_badges(freshness: pd.DataFrame) -> None:
+    if freshness is None or freshness.empty:
+        return
+    parts: list[str] = []
+    for row in freshness.itertuples(index=False):
+        oem = str(row.oem)
+        color = OEM_COLORS.get(oem, "#64748B")
+        generated = pd.to_datetime(row.cache_generated_utc, errors="coerce", utc=True)
+        modified = pd.to_datetime(row.file_modified_local, errors="coerce")
+        latest_order = pd.to_datetime(row.latest_order_date, errors="coerce")
+        latest_year = row.latest_order_year
+
+        if pd.notna(generated):
+            cache_txt = generated.strftime("%Y-%m-%d %H:%M UTC")
+        elif pd.notna(modified):
+            cache_txt = modified.strftime("%Y-%m-%d %H:%M")
+        else:
+            cache_txt = "-"
+
+        if pd.notna(latest_order):
+            order_txt = latest_order.strftime("%Y-%m-%d")
+        elif pd.notna(latest_year):
+            order_txt = str(int(float(latest_year)))
+        else:
+            order_txt = "-"
+
+        parts.append(
+            f"<span class='freshness-badge' style='border-color:{hex_to_rgba(color, 0.55)};"
+            f"background:{hex_to_rgba(color, 0.14)};'>"
+            f"<strong>{oem}</strong> cache: {cache_txt} | latest order: {order_txt}"
+            "</span>"
+        )
+    if parts:
+        st.markdown("**Data Freshness**")
+        st.markdown("<div class='freshness-wrap'>" + "".join(parts) + "</div>", unsafe_allow_html=True)
+
+
+@st.cache_data(show_spinner=False)
 def load_turbine_catalog(_signature: str) -> tuple[pd.DataFrame, str | None, list[str]]:
     if not TURBINE_CATALOG_FILE.exists():
         return pd.DataFrame(), None, []
@@ -513,28 +630,34 @@ def build_economy_comparison(economy: pd.DataFrame) -> pd.DataFrame:
     for oem, frame in economy.groupby("oem"):
         econ = frame.copy()
 
-        revenue_tokens = {
+        revenue_tokens_map = {
             "Vestas": [["revenue", "meur"], ["revenue"]],
             "Nordex": [["gross", "revenue"], ["revenue"]],
             "Siemens Gamesa": [["total", "revenue"], ["revenue"]],
-        }[oem]
+            "Suzlon": [["revenue", "meur", "converted"], ["revenue", "converted"], ["revenue", "meur"]],
+        }
+        revenue_tokens = revenue_tokens_map.get(oem, [["revenue", "meur"], ["revenue"]])
         revenue = metric_series(econ, revenue_tokens, scale=1.0)
         if not revenue.empty:
             revenue["oem"] = oem
             revenue["metric_name"] = "Revenue (mEUR, as reported)"
             rows.append(revenue)
 
-        intake_tokens = {
-            "Vestas": [["order", "intake", "bneur"], ["order", "intake"]],
-            "Nordex": [["order", "intake", "m"], ["order", "intake"]],
-            "Siemens Gamesa": [["total", "order", "intake"], ["firm", "order", "intake"], ["order", "intake"]],
-        }[oem]
-        intake_scale = 1000.0 if oem == "Vestas" else 1.0
-        intake = metric_series(econ, intake_tokens, scale=intake_scale)
-        if not intake.empty:
-            intake["oem"] = oem
-            intake["metric_name"] = "Order intake value (mEUR, normalized)"
-            rows.append(intake)
+        intake_map: dict[str, tuple[list[list[str]], float]] = {
+            "Vestas": ([["order", "intake", "bneur"], ["order", "intake"]], 1000.0),
+            "Nordex": ([["order", "intake", "m"], ["order", "intake", "eur"]], 1.0),
+            "Siemens Gamesa": (
+                [["total", "order", "intake"], ["firm", "order", "intake"], ["order", "intake", "eur"]],
+                1.0,
+            ),
+        }
+        if oem in intake_map:
+            intake_tokens, intake_scale = intake_map[oem]
+            intake = metric_series(econ, intake_tokens, scale=intake_scale)
+            if not intake.empty:
+                intake["oem"] = oem
+                intake["metric_name"] = "Order intake value (mEUR, normalized)"
+                rows.append(intake)
 
         if oem == "Vestas":
             wind = metric_series(econ, [["order", "backlog", "wind", "bneur"]], scale=1000.0)
@@ -546,6 +669,22 @@ def build_economy_comparison(economy: pd.DataFrame) -> pd.DataFrame:
                 backlog["oem"] = oem
                 backlog["metric_name"] = "Order backlog value (mEUR, combined)"
                 rows.append(backlog)
+        elif oem == "Nordex":
+            total = metric_series(econ, [["order", "backlog", "total", "meur"]], scale=1.0)
+            if not total.empty:
+                total["oem"] = oem
+                total["metric_name"] = "Order backlog value (mEUR, combined)"
+                rows.append(total)
+            else:
+                projects = metric_series(econ, [["order", "backlog", "projects", "meur"]], scale=1.0)
+                service = metric_series(econ, [["order", "backlog", "service", "meur"]], scale=1.0)
+                backlog = projects.merge(service, on="year", how="outer", suffixes=("_proj", "_svc"))
+                if not backlog.empty:
+                    backlog["value"] = backlog[["value_proj", "value_svc"]].fillna(0.0).sum(axis=1)
+                    backlog = backlog[["year", "value"]]
+                    backlog["oem"] = oem
+                    backlog["metric_name"] = "Order backlog value (mEUR, combined)"
+                    rows.append(backlog)
         elif oem == "Siemens Gamesa":
             # SGRE backlog metrics are treated as bEUR in source sheet and normalized to mEUR here.
             onshore = metric_series(econ, [["order", "backlog", "onshore"]], scale=1000.0)
@@ -769,6 +908,16 @@ def render_sizes_tab(orders: pd.DataFrame, platforms: pd.DataFrame) -> None:
     yearly = build_yearly_order_stats(orders)
     platform_yearly = build_platform_size_stats(platforms)
 
+    stat_options = ["Average", "Min", "Max"]
+    stat_view = st.radio(
+        "Show statistics",
+        options=["All", "Average", "Min", "Max"],
+        index=0,
+        horizontal=True,
+        help="Filter all size/service charts by statistic type.",
+    )
+    selected_stats = stat_options if stat_view == "All" else [stat_view]
+
     if platform_yearly.empty:
         st.info("No platform size data available for current filters.")
     else:
@@ -786,6 +935,7 @@ def render_sizes_tab(orders: pd.DataFrame, platforms: pd.DataFrame) -> None:
             }
         )
         rotor_long = rotor_long.dropna(subset=["rotor_m"])
+        rotor_long = rotor_long[rotor_long["stat"].isin(selected_stats)]
         plot_line(
             rotor_long,
             "order_year",
@@ -810,6 +960,7 @@ def render_sizes_tab(orders: pd.DataFrame, platforms: pd.DataFrame) -> None:
             }
         )
         mw_long = mw_long.dropna(subset=["mw_rating"])
+        mw_long = mw_long[mw_long["stat"].isin(selected_stats)]
         plot_line(
             mw_long,
             "order_year",
@@ -838,6 +989,7 @@ def render_sizes_tab(orders: pd.DataFrame, platforms: pd.DataFrame) -> None:
         }
     )
     order_size_long = order_size_long.dropna(subset=["order_size"])
+    order_size_long = order_size_long[order_size_long["stat"].isin(selected_stats)]
     order_cap = 2000.0
     order_plot = order_size_long.copy()
     order_plot["order_size_plot"] = order_plot["order_size"].clip(upper=order_cap)
@@ -898,6 +1050,7 @@ def render_sizes_tab(orders: pd.DataFrame, platforms: pd.DataFrame) -> None:
         }
     )
     service_long = service_long.dropna(subset=["service_years"])
+    service_long = service_long[service_long["stat"].isin(selected_stats)]
     if service_long.empty:
         st.info("No service length data available for current filters.")
     else:
@@ -957,6 +1110,13 @@ def render_geo_tab(orders: pd.DataFrame) -> None:
         template=plotly_template(),
         title="Continent Mix Over Time by OEM",
         height=520,
+    )
+    fig_area.for_each_annotation(
+        lambda ann: ann.update(
+            text=ann.text.replace("oem=", ""),
+            font=dict(size=16, color=ann.font.color if ann.font and ann.font.color else None),
+            y=(ann.y - 0.025) if ann.y is not None else ann.y,
+        )
     )
     fig_area.update_layout(margin=dict(l=8, r=8, t=56, b=8), yaxis_title="Ordered MW", legend_title_text="")
     st.plotly_chart(fig_area, width="stretch")
@@ -1048,19 +1208,14 @@ def render_turbine_portfolio_tab(catalog: pd.DataFrame, catalog_generated: str |
     if scatter_data.empty:
         st.info("No rows with both rotor diameter and rated power in selected turbine portfolio.")
     else:
-        segment_colors = {
-            "Onshore": "#16A34A",
-            "Offshore": "#1D4ED8",
-        }
-        oem_symbols = {
-            "Vestas": "circle",
-            "Nordex": "diamond",
-            "Siemens Gamesa": "square",
+        segment_symbol_map = {
+            "Onshore": "circle",
+            "Offshore": "circle",
         }
         ctrl1, ctrl2, ctrl3 = st.columns([1.3, 1.2, 1.0])
         scatter_view = ctrl1.radio(
             "Scatter view",
-            options=["Facet by OEM", "Combined"],
+            options=["Combined", "Facet by OEM"],
             index=0,
             horizontal=True,
             key="turbine_scatter_view",
@@ -1097,10 +1252,12 @@ def render_turbine_portfolio_tab(catalog: pd.DataFrame, catalog_generated: str |
         if scatter_view == "Facet by OEM":
             fig_scatter = px.scatter(
                 scatter_plot,
-                color="segment_item",
-                color_discrete_map=segment_colors,
+                color="oem",
+                color_discrete_map=OEM_COLORS,
+                symbol="segment_item",
+                symbol_map=segment_symbol_map,
                 facet_col="oem",
-                facet_col_wrap=3,
+                facet_col_wrap=2,
                 height=620,
                 **base_kwargs,
             )
@@ -1110,17 +1267,50 @@ def render_turbine_portfolio_tab(catalog: pd.DataFrame, catalog_generated: str |
         else:
             fig_scatter = px.scatter(
                 scatter_plot,
-                color="segment_item",
-                symbol="oem",
-                color_discrete_map=segment_colors,
-                symbol_map=oem_symbols,
+                color="oem",
+                color_discrete_map=OEM_COLORS,
+                symbol="segment_item",
+                symbol_map=segment_symbol_map,
                 height=580,
                 **base_kwargs,
             )
 
-        fig_scatter.update_traces(
-            marker=dict(size=marker_size, opacity=0.82, line=dict(width=0.8, color="rgba(15,23,42,0.35)"))
-        )
+        fig_scatter.update_traces(marker=dict(size=marker_size, opacity=0.86, line=dict(width=0.8, color="rgba(15,23,42,0.30)")))
+        seen_oems: set[str] = set()
+        for trace in fig_scatter.data:
+            raw_name = str(getattr(trace, "name", ""))
+            parts = [p.strip() for p in raw_name.split(",") if p.strip()]
+            oem_name = ""
+            segment_name = ""
+            for part in parts:
+                low = part.lower()
+                if low.startswith("oem="):
+                    oem_name = part.split("=", 1)[1].strip()
+                elif low.startswith("segment_item=") or low.startswith("segment="):
+                    segment_name = part.split("=", 1)[1].strip()
+                elif not oem_name:
+                    oem_name = part
+                elif not segment_name:
+                    segment_name = part
+            if not segment_name:
+                lname = raw_name.lower()
+                if "offshore" in lname:
+                    segment_name = "Offshore"
+                elif "onshore" in lname:
+                    segment_name = "Onshore"
+
+            is_offshore = segment_name.lower() == "offshore"
+            trace.marker.line.color = "#1D4ED8" if is_offshore else "rgba(15,23,42,0.30)"
+            trace.marker.line.width = 2.8 if is_offshore else 0.8
+
+            legend_oem = oem_name or raw_name
+            if legend_oem in seen_oems:
+                trace.showlegend = False
+            else:
+                trace.showlegend = True
+                trace.name = legend_oem
+                seen_oems.add(legend_oem)
+
         if label_mode != "Hover only (clean)":
             fig_scatter.update_traces(textposition="top center", textfont=dict(size=10))
 
@@ -1139,7 +1329,7 @@ def render_turbine_portfolio_tab(catalog: pd.DataFrame, catalog_generated: str |
         )
         fig_scatter.update_xaxes(range=[x_min - x_pad, x_max + x_pad], showgrid=True, zeroline=False)
         fig_scatter.update_yaxes(range=[max(0.0, y_min - y_pad), y_max + y_pad], showgrid=True, zeroline=False)
-        st.caption("Default view is optimized for readability. Use hover for details; enable labels only when needed.")
+        st.caption("Default view is optimized for readability. Offshore models are shown with thick blue outlines.")
         st.plotly_chart(fig_scatter, width="stretch")
 
     c1, c2 = st.columns(2)
@@ -1224,13 +1414,13 @@ def render_information_page() -> None:
 
     st.markdown("**Sources and attribution**")
     st.write(
-        "All figures are compiled manually from public investor communications (press releases/announcements), annual reports, and official product pages for Vestas, Nordex, and Siemens Gamesa."
+        "All figures are compiled manually from public investor communications (press releases/announcements), annual reports, and official product pages for Vestas, Nordex, Siemens Gamesa, and Suzlon."
     )
     st.write("Each datapoint should be verified against the original source documents.")
 
     st.markdown("**No affiliation / no endorsement**")
     st.write(
-        "This is an unofficial, independent dashboard and is not affiliated with, endorsed by, or sponsored by Vestas, Nordex, or Siemens Gamesa."
+        "This is an unofficial, independent dashboard and is not affiliated with, endorsed by, or sponsored by Vestas, Nordex, Siemens Gamesa, or Suzlon."
     )
 
     st.markdown("**IP and rights**")
@@ -1260,12 +1450,14 @@ def main() -> None:
     signature = "|".join(file_signature(path) for path in cache_paths.values())
     cache_paths_txt = {oem: str(path) for oem, path in cache_paths.items()}
     economy_all, orders_all, platforms_all, issues = load_all_oem_data(signature, cache_paths_txt)
+    cache_freshness = load_cache_freshness(signature, cache_paths_txt)
 
     catalog_signature = file_signature(TURBINE_CATALOG_FILE)
     turbine_catalog, catalog_generated, failed_sources = load_turbine_catalog(catalog_signature)
 
     st.title(APP_TITLE)
-    st.caption("Combined benchmark from Vestas, Nordex, and Siemens Gamesa parsed dashboard datasets.")
+    st.caption("Combined benchmark from Vestas, Nordex, Siemens Gamesa, and Suzlon parsed dashboard datasets.")
+    render_data_freshness_badges(cache_freshness)
 
     if issues:
         for issue in issues:
@@ -1291,9 +1483,10 @@ def main() -> None:
 
     st.sidebar.divider()
     st.sidebar.markdown("**OEM Deep Dive**")
-    st.sidebar.link_button("Vestas all details", "https://vestas.streamlit.app")
-    st.sidebar.link_button("Nordex all details", "https://nordex.streamlit.app")
-    st.sidebar.link_button("SGRE all details", "https://siemens-gamesa.streamlit.app")
+    st.sidebar.link_button("Vestas all details", "https://vestas.streamlit.app", use_container_width=True)
+    st.sidebar.link_button("Nordex all details", "https://nordex.streamlit.app", use_container_width=True)
+    st.sidebar.link_button("SGRE all details", "https://siemens-gamesa.streamlit.app", use_container_width=True)
+    st.sidebar.link_button("Suzlon all details", "https://suzlon.streamlit.app", use_container_width=True)
 
     orders_f = orders_all[
         (orders_all["oem"].isin(selected_oems))

@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-03-04T18:31:16+00:00",
+  "generated_utc": "2026-03-05T10:21:03+00:00",
   "sources": [
     {
       "oem": "Vestas",
@@ -54,6 +54,36 @@
       "segment": "Offshore",
       "platform": "Offshore Portfolio",
       "url": "https://www.siemensgamesa.com/global/en/home/products-and-services/offshore.html"
+    },
+    {
+      "oem": "Suzlon",
+      "segment": "Onshore",
+      "platform": "S-Series Platform",
+      "url": "https://www.suzlon.com/in-en/energy-solutions/s111-wind-turbine-generator"
+    },
+    {
+      "oem": "Suzlon",
+      "segment": "Onshore",
+      "platform": "S-Series Platform",
+      "url": "https://www.suzlon.com/in-en/energy-solutions/s120-wind-turbine-generator"
+    },
+    {
+      "oem": "Suzlon",
+      "segment": "Onshore",
+      "platform": "S-Series Platform",
+      "url": "https://www.suzlon.com/in-en/energy-solutions/s128-wind-turbine-generator"
+    },
+    {
+      "oem": "Suzlon",
+      "segment": "Onshore",
+      "platform": "S-Series Platform",
+      "url": "https://www.suzlon.com/in-en/energy-solutions/s133-wind-turbine-generator"
+    },
+    {
+      "oem": "Suzlon",
+      "segment": "Onshore",
+      "platform": "S-Series Platform",
+      "url": "https://www.suzlon.com/in-en/energy-solutions/s144-wind-turbine-generator"
     }
   ],
   "failed_sources": [],
@@ -416,6 +446,102 @@
       "power_class": null,
       "source_urls": [
         "https://www.siemensgamesa.com/global/en/home/products-and-services/onshore.html"
+      ]
+    },
+    {
+      "oem": "Suzlon",
+      "model": "S111-2.1",
+      "segment": "Onshore",
+      "platform": "S-Series Platform",
+      "rotor_diameter_m": 111.0,
+      "rated_power_mw": 2.1,
+      "power_class": null,
+      "source_urls": [
+        "https://www.suzlon.com/in-en/energy-solutions/s111-wind-turbine-generator"
+      ]
+    },
+    {
+      "oem": "Suzlon",
+      "model": "S120-2.1",
+      "segment": "Onshore",
+      "platform": "S-Series Platform",
+      "rotor_diameter_m": 120.0,
+      "rated_power_mw": 2.1,
+      "power_class": null,
+      "source_urls": [
+        "https://www.suzlon.com/in-en/energy-solutions/s120-wind-turbine-generator"
+      ]
+    },
+    {
+      "oem": "Suzlon",
+      "model": "S128-2.6",
+      "segment": "Onshore",
+      "platform": "S-Series Platform",
+      "rotor_diameter_m": 128.0,
+      "rated_power_mw": 2.6,
+      "power_class": null,
+      "source_urls": [
+        "https://www.suzlon.com/in-en/energy-solutions/s128-wind-turbine-generator"
+      ]
+    },
+    {
+      "oem": "Suzlon",
+      "model": "S128-2.7",
+      "segment": "Onshore",
+      "platform": "S-Series Platform",
+      "rotor_diameter_m": 128.0,
+      "rated_power_mw": 2.7,
+      "power_class": null,
+      "source_urls": [
+        "https://www.suzlon.com/in-en/energy-solutions/s128-wind-turbine-generator"
+      ]
+    },
+    {
+      "oem": "Suzlon",
+      "model": "S133-2.6",
+      "segment": "Onshore",
+      "platform": "S-Series Platform",
+      "rotor_diameter_m": 133.0,
+      "rated_power_mw": 2.6,
+      "power_class": null,
+      "source_urls": [
+        "https://www.suzlon.com/in-en/energy-solutions/s133-wind-turbine-generator"
+      ]
+    },
+    {
+      "oem": "Suzlon",
+      "model": "S133-3.0",
+      "segment": "Onshore",
+      "platform": "S-Series Platform",
+      "rotor_diameter_m": 133.0,
+      "rated_power_mw": 3.0,
+      "power_class": null,
+      "source_urls": [
+        "https://www.suzlon.com/in-en/energy-solutions/s133-wind-turbine-generator"
+      ]
+    },
+    {
+      "oem": "Suzlon",
+      "model": "S144-3.0",
+      "segment": "Onshore",
+      "platform": "S-Series Platform",
+      "rotor_diameter_m": 144.0,
+      "rated_power_mw": 3.0,
+      "power_class": null,
+      "source_urls": [
+        "https://www.suzlon.com/in-en/energy-solutions/s144-wind-turbine-generator"
+      ]
+    },
+    {
+      "oem": "Suzlon",
+      "model": "S144-3.15",
+      "segment": "Onshore",
+      "platform": "S-Series Platform",
+      "rotor_diameter_m": 144.0,
+      "rated_power_mw": 3.15,
+      "power_class": null,
+      "source_urls": [
+        "https://www.suzlon.com/in-en/energy-solutions/s144-wind-turbine-generator"
       ]
     },
     {

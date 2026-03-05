@@ -66,11 +66,58 @@ SOURCES = [
         "platform": "Offshore Portfolio",
         "url": "https://www.siemensgamesa.com/global/en/home/products-and-services/offshore.html",
     },
+    {
+        "oem": "Suzlon",
+        "segment": "Onshore",
+        "platform": "S-Series Platform",
+        "url": "https://www.suzlon.com/in-en/energy-solutions/s111-wind-turbine-generator",
+    },
+    {
+        "oem": "Suzlon",
+        "segment": "Onshore",
+        "platform": "S-Series Platform",
+        "url": "https://www.suzlon.com/in-en/energy-solutions/s120-wind-turbine-generator",
+    },
+    {
+        "oem": "Suzlon",
+        "segment": "Onshore",
+        "platform": "S-Series Platform",
+        "url": "https://www.suzlon.com/in-en/energy-solutions/s128-wind-turbine-generator",
+    },
+    {
+        "oem": "Suzlon",
+        "segment": "Onshore",
+        "platform": "S-Series Platform",
+        "url": "https://www.suzlon.com/in-en/energy-solutions/s133-wind-turbine-generator",
+    },
+    {
+        "oem": "Suzlon",
+        "segment": "Onshore",
+        "platform": "S-Series Platform",
+        "url": "https://www.suzlon.com/in-en/energy-solutions/s144-wind-turbine-generator",
+    },
 ]
 
 VESTAS_RE = re.compile(r"\bV\d{2,3}[\-/]\d{1,2}(?:\.\d+)?(?:MW)?\b", re.IGNORECASE)
 NORDEX_RE = re.compile(r"\b(?:N|AW|S)\d{2,3}(?:/[0-9NXx\.]+)?\b")
 SGRE_RE = re.compile(r"\bSG\s?\d{1,2}(?:\.\d+)?-\d{2,3}(?:\s?DD)?\b", re.IGNORECASE)
+SUZLON_URL_MODEL_RE = re.compile(r"/s(\d{2,3})-wind-turbine-generator", re.IGNORECASE)
+
+SUZLON_POWER_RANGE_BY_ROTOR = {
+    111: (2.0, 2.2),
+    120: (2.0, 2.2),
+    128: (2.5, 2.8),
+    133: (2.5, 3.1),
+    144: (2.8, 3.2),
+}
+
+SUZLON_FALLBACK_BY_ROTOR = {
+    111: [2.1],
+    120: [2.1],
+    128: [2.6, 2.7],
+    133: [2.6, 3.0],
+    144: [3.0, 3.15],
+}
 
 
 def fetch_html(url: str) -> str:
@@ -141,6 +188,46 @@ def parse_sgre_model(raw: str) -> tuple[str, float | None, float | None, str | N
     return model, rotor, power, None
 
 
+def format_power_label(power: float) -> str:
+    text = f"{power:.2f}".rstrip("0").rstrip(".")
+    if "." not in text:
+        text = f"{text}.0"
+    return text
+
+
+def extract_suzlon_models(source: dict[str, str], html: str) -> list[dict[str, Any]]:
+    url = source["url"]
+    m = SUZLON_URL_MODEL_RE.search(url)
+    if not m:
+        return []
+
+    rotor_i = int(m.group(1))
+    rotor = float(rotor_i)
+    low, high = SUZLON_POWER_RANGE_BY_ROTOR.get(rotor_i, (1.0, 6.0))
+
+    raw_powers = re.findall(r"\b([1-9](?:\.\d{1,2})?)\s*MW\b", html, re.IGNORECASE)
+    values = sorted({round(float(v), 2) for v in raw_powers if low <= float(v) <= high})
+    if not values:
+        values = SUZLON_FALLBACK_BY_ROTOR.get(rotor_i, [])
+
+    rows: list[dict[str, Any]] = []
+    for power in values:
+        model = f"S{rotor_i}-{format_power_label(power)}"
+        rows.append(
+            {
+                "oem": "Suzlon",
+                "segment": source["segment"],
+                "platform": source["platform"],
+                "model": model,
+                "rotor_diameter_m": rotor,
+                "rated_power_mw": float(power),
+                "power_class": None,
+                "source_url": url,
+            }
+        )
+    return rows
+
+
 def allow_by_segment(oem: str, segment: str, rated_power_mw: float | None) -> bool:
     if rated_power_mw is None:
         return True
@@ -165,6 +252,8 @@ def extract_models(source: dict[str, str], html: str) -> list[dict[str, Any]]:
     elif oem == "Nordex":
         matches = set(NORDEX_RE.findall(html))
         parser = parse_nordex_model
+    elif oem == "Suzlon":
+        return extract_suzlon_models(source, html)
     else:
         matches = set(SGRE_RE.findall(html))
         parser = parse_sgre_model

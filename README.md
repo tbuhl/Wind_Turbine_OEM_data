@@ -1,6 +1,6 @@
 ﻿# Wind Turbine OEM Benchmark Dashboard
 
-Combined Streamlit dashboard comparing Vestas, Nordex, and Siemens Gamesa.
+Combined Streamlit dashboard comparing Vestas, Nordex, Siemens Gamesa, and Suzlon.
 
 ## What This Dashboard Includes
 - `Overall Economics`
@@ -26,11 +26,13 @@ Primary cache files (included in this repo for deployment):
 - `data_cache/vestas_parsed_data.pkl`
 - `data_cache/nordex_parsed_data.pkl`
 - `data_cache/sgre_parsed_data.pkl`
+- `data_cache/suzlon_parsed_data.pkl`
 
 Local fallback (for developer workflow):
 - `../Vestas_sales/data_cache/vestas_parsed_data.pkl`
 - `../nordex_sales/data_cache/nordex_parsed_data.pkl`
 - `../SGRE_sales/data_cache/sgre_parsed_data.pkl`
+- `../Suzlon_sales/data_cache/suzlon_parsed_data.pkl`
 
 Turbine product catalog:
 - `data/oem_turbine_catalog.json`
@@ -44,6 +46,7 @@ Sources used in builder:
 - Vestas onshore/offshore product pages
 - Nordex product main page
 - Siemens Gamesa onshore/offshore pages
+- Suzlon S-series turbine pages
 
 ## Run Locally
 ```powershell
@@ -61,4 +64,4 @@ If using a local virtual environment:
 - The dashboard shows the latest handled date/year from loaded datasets.
 - Economics metrics are mapped by metric-name heuristics; units are normalized where possible.
 - If one OEM does not report a metric in the same way, that series is omitted for that OEM.
-- For Streamlit Community Cloud, keep the three `data_cache/*.pkl` files committed in this repository.
+- For Streamlit Community Cloud, keep the four `data_cache/*.pkl` files committed in this repository.
