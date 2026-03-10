@@ -96,12 +96,45 @@ SOURCES = [
         "platform": "S-Series Platform",
         "url": "https://www.suzlon.com/in-en/energy-solutions/s144-wind-turbine-generator",
     },
+    {
+        "oem": "GE",
+        "segment": "Onshore",
+        "platform": "3 MW Platform",
+        "url": "https://www.gevernova.com/wind-power/wind-turbines/onshore-wind-turbines-3mw",
+    },
+    {
+        "oem": "GE",
+        "segment": "Onshore",
+        "platform": "4 MW Platform",
+        "url": "https://www.gevernova.com/wind-power/wind-turbines/onshore-wind-turbines-4mw",
+    },
+    {
+        "oem": "GE",
+        "segment": "Onshore",
+        "platform": "6 MW Platform",
+        "url": "https://www.gevernova.com/wind-power/wind-turbines/onshore-wind-turbines-6mw",
+    },
+    {
+        "oem": "GE",
+        "segment": "Offshore",
+        "platform": "Haliade-X Portfolio",
+        "url": "https://www.gevernova.com/wind-power/wind-turbines/offshore-wind-turbines",
+    },
+    {
+        "oem": "GE",
+        "segment": "Offshore",
+        "platform": "Haliade-X",
+        "url": "https://www.gevernova.com/news/press-releases/ge-haliade-x-14-7mw-220-turbine-obtains-full-dnv-type-certificate",
+    },
 ]
 
 VESTAS_RE = re.compile(r"\bV\d{2,3}[\-/]\d{1,2}(?:\.\d+)?(?:MW)?\b", re.IGNORECASE)
 NORDEX_RE = re.compile(r"\b(?:N|AW|S)\d{2,3}(?:/[0-9NXx\.]+)?\b")
 SGRE_RE = re.compile(r"\bSG\s?\d{1,2}(?:\.\d+)?-\d{2,3}(?:\s?DD)?\b", re.IGNORECASE)
 SUZLON_URL_MODEL_RE = re.compile(r"/s(\d{2,3})-wind-turbine-generator", re.IGNORECASE)
+GE_ONSHORE_RE = re.compile(r"\b(\d{1,2}(?:\.\d+)?)\s*MW[-\s]*(\d{2,3})m\b", re.IGNORECASE)
+GE_HALIADE_RE = re.compile(r"\bHaliade[-\s]?X[^0-9]{0,30}(\d{1,2}(?:\.\d+)?)\s*MW[-\s]*(\d{2,3})(?:m)?\b", re.IGNORECASE)
+GE_MW_220_RE = re.compile(r"\b(\d{1,2}(?:\.\d+)?)\s*MW[-\s]*(22\d)(?:m)?\b", re.IGNORECASE)
 
 SUZLON_POWER_RANGE_BY_ROTOR = {
     111: (2.0, 2.2),
@@ -228,6 +261,57 @@ def extract_suzlon_models(source: dict[str, str], html: str) -> list[dict[str, A
     return rows
 
 
+def extract_ge_models(source: dict[str, str], html: str) -> list[dict[str, Any]]:
+    segment = source["segment"]
+    platform = source["platform"]
+    url = source["url"]
+    rows: list[dict[str, Any]] = []
+
+    if segment == "Onshore":
+        pairs = {(float(power), float(rotor)) for power, rotor in GE_ONSHORE_RE.findall(html)}
+        for power, rotor in sorted(pairs):
+            if not (1.0 <= power <= 10.0 and 80.0 <= rotor <= 220.0):
+                continue
+            model = f"GE {format_power_label(power)}-{int(rotor)}"
+            rows.append(
+                {
+                    "oem": "GE",
+                    "segment": segment,
+                    "platform": platform,
+                    "model": model,
+                    "rotor_diameter_m": rotor,
+                    "rated_power_mw": power,
+                    "power_class": None,
+                    "source_url": url,
+                }
+            )
+        return rows
+
+    # Offshore: first prioritize explicit "Haliade-X X MW-YYY" pattern,
+    # then fallback to generic "X MW-220" occurrences in official GE pages.
+    pairs = {(float(power), float(rotor)) for power, rotor in GE_HALIADE_RE.findall(html)}
+    if not pairs:
+        pairs = {(float(power), float(rotor)) for power, rotor in GE_MW_220_RE.findall(html)}
+
+    for power, rotor in sorted(pairs):
+        if not (8.0 <= power <= 20.0 and 160.0 <= rotor <= 260.0):
+            continue
+        model = f"Haliade-X {format_power_label(power)}-{int(rotor)}"
+        rows.append(
+            {
+                "oem": "GE",
+                "segment": segment,
+                "platform": platform,
+                "model": model,
+                "rotor_diameter_m": rotor,
+                "rated_power_mw": power,
+                "power_class": None,
+                "source_url": url,
+            }
+        )
+    return rows
+
+
 def allow_by_segment(oem: str, segment: str, rated_power_mw: float | None) -> bool:
     if rated_power_mw is None:
         return True
@@ -236,6 +320,10 @@ def allow_by_segment(oem: str, segment: str, rated_power_mw: float | None) -> bo
     if oem == "Siemens Gamesa" and segment == "Onshore" and rated_power_mw >= 8.0:
         return False
     if oem == "Siemens Gamesa" and segment == "Offshore" and rated_power_mw < 8.0:
+        return False
+    if oem == "GE" and segment == "Onshore" and rated_power_mw >= 8.0:
+        return False
+    if oem == "GE" and segment == "Offshore" and rated_power_mw < 8.0:
         return False
     return True
 
@@ -254,6 +342,8 @@ def extract_models(source: dict[str, str], html: str) -> list[dict[str, Any]]:
         parser = parse_nordex_model
     elif oem == "Suzlon":
         return extract_suzlon_models(source, html)
+    elif oem == "GE":
+        return extract_ge_models(source, html)
     else:
         matches = set(SGRE_RE.findall(html))
         parser = parse_sgre_model

@@ -32,6 +32,10 @@ OEM_CACHE_PATH_CANDIDATES = {
         APP_DIR / "data_cache" / "suzlon_parsed_data.pkl",
         PROJECT_ROOT / "Suzlon_sales" / "data_cache" / "suzlon_parsed_data.pkl",
     ],
+    "GE": [
+        APP_DIR / "data_cache" / "ge_parsed_data.pkl",
+        PROJECT_ROOT / "GE_sales" / "data_cache" / "ge_parsed_data.pkl",
+    ],
 }
 
 TURBINE_CATALOG_FILE = APP_DIR / "data" / "oem_turbine_catalog.json"
@@ -41,6 +45,7 @@ OEM_COLORS = {
     "Nordex": "#F18F01",
     "Siemens Gamesa": "#5E8F49",
     "Suzlon": "#D1495B",
+    "GE": "#9333EA",
 }
 
 
@@ -635,6 +640,7 @@ def build_economy_comparison(economy: pd.DataFrame) -> pd.DataFrame:
             "Nordex": [["gross", "revenue"], ["revenue"]],
             "Siemens Gamesa": [["total", "revenue"], ["revenue"]],
             "Suzlon": [["revenue", "meur", "converted"], ["revenue", "converted"], ["revenue", "meur"]],
+            "GE": [["revenueusdm"], ["revenue", "usd"]],
         }
         revenue_tokens = revenue_tokens_map.get(oem, [["revenue", "meur"], ["revenue"]])
         revenue = metric_series(econ, revenue_tokens, scale=1.0)
@@ -650,6 +656,7 @@ def build_economy_comparison(economy: pd.DataFrame) -> pd.DataFrame:
                 [["total", "order", "intake"], ["firm", "order", "intake"], ["order", "intake", "eur"]],
                 1.0,
             ),
+            "GE": ([["ordersorderintakeusdm"], ["order", "intake", "usd"]], 1.0),
         }
         if oem in intake_map:
             intake_tokens, intake_scale = intake_map[oem]
@@ -698,6 +705,12 @@ def build_economy_comparison(economy: pd.DataFrame) -> pd.DataFrame:
                 backlog["oem"] = oem
                 backlog["metric_name"] = "Order backlog value (mEUR, combined)"
                 rows.append(backlog)
+        elif oem == "GE":
+            total = metric_series(econ, [["totalorderbacklogusdm"], ["order", "backlog", "usd"]], scale=1.0)
+            if not total.empty:
+                total["oem"] = oem
+                total["metric_name"] = "Order backlog value (mEUR, combined)"
+                rows.append(total)
 
     if not rows:
         return pd.DataFrame(columns=["year", "value", "oem", "metric_name"])
@@ -1414,13 +1427,13 @@ def render_information_page() -> None:
 
     st.markdown("**Sources and attribution**")
     st.write(
-        "All figures are compiled manually from public investor communications (press releases/announcements), annual reports, and official product pages for Vestas, Nordex, Siemens Gamesa, and Suzlon."
+        "All figures are compiled manually from public investor communications (press releases/announcements), annual reports, and official product pages for Vestas, Nordex, Siemens Gamesa, Suzlon, and GE."
     )
     st.write("Each datapoint should be verified against the original source documents.")
 
     st.markdown("**No affiliation / no endorsement**")
     st.write(
-        "This is an unofficial, independent dashboard and is not affiliated with, endorsed by, or sponsored by Vestas, Nordex, Siemens Gamesa, or Suzlon."
+        "This is an unofficial, independent dashboard and is not affiliated with, endorsed by, or sponsored by Vestas, Nordex, Siemens Gamesa, Suzlon, or GE."
     )
 
     st.markdown("**IP and rights**")
@@ -1456,7 +1469,7 @@ def main() -> None:
     turbine_catalog, catalog_generated, failed_sources = load_turbine_catalog(catalog_signature)
 
     st.title(APP_TITLE)
-    st.caption("Combined benchmark from Vestas, Nordex, Siemens Gamesa, and Suzlon parsed dashboard datasets.")
+    st.caption("Combined benchmark from Vestas, Nordex, Siemens Gamesa, Suzlon, and GE parsed dashboard datasets.")
     render_data_freshness_badges(cache_freshness)
 
     if issues:
@@ -1487,6 +1500,7 @@ def main() -> None:
     st.sidebar.link_button("Nordex all details", "https://nordex.streamlit.app", use_container_width=True)
     st.sidebar.link_button("SGRE all details", "https://siemens-gamesa.streamlit.app", use_container_width=True)
     st.sidebar.link_button("Suzlon all details", "https://suzlon.streamlit.app", use_container_width=True)
+    st.sidebar.link_button("GE all details", "https://gevernova.streamlit.app/", use_container_width=True)
 
     orders_f = orders_all[
         (orders_all["oem"].isin(selected_oems))

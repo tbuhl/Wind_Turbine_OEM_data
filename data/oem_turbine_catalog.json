@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-03-05T10:21:03+00:00",
+  "generated_utc": "2026-03-06T19:01:57+00:00",
   "sources": [
     {
       "oem": "Vestas",
@@ -84,10 +84,124 @@
       "segment": "Onshore",
       "platform": "S-Series Platform",
       "url": "https://www.suzlon.com/in-en/energy-solutions/s144-wind-turbine-generator"
+    },
+    {
+      "oem": "GE",
+      "segment": "Onshore",
+      "platform": "3 MW Platform",
+      "url": "https://www.gevernova.com/wind-power/wind-turbines/onshore-wind-turbines-3mw"
+    },
+    {
+      "oem": "GE",
+      "segment": "Onshore",
+      "platform": "4 MW Platform",
+      "url": "https://www.gevernova.com/wind-power/wind-turbines/onshore-wind-turbines-4mw"
+    },
+    {
+      "oem": "GE",
+      "segment": "Onshore",
+      "platform": "6 MW Platform",
+      "url": "https://www.gevernova.com/wind-power/wind-turbines/onshore-wind-turbines-6mw"
+    },
+    {
+      "oem": "GE",
+      "segment": "Offshore",
+      "platform": "Haliade-X Portfolio",
+      "url": "https://www.gevernova.com/wind-power/wind-turbines/offshore-wind-turbines"
+    },
+    {
+      "oem": "GE",
+      "segment": "Offshore",
+      "platform": "Haliade-X",
+      "url": "https://www.gevernova.com/news/press-releases/ge-haliade-x-14-7mw-220-turbine-obtains-full-dnv-type-certificate"
     }
   ],
   "failed_sources": [],
   "models": [
+    {
+      "oem": "GE",
+      "model": "Haliade-X 14.7-220",
+      "segment": "Offshore",
+      "platform": "Haliade-X",
+      "rotor_diameter_m": 220.0,
+      "rated_power_mw": 14.7,
+      "power_class": null,
+      "source_urls": [
+        "https://www.gevernova.com/news/press-releases/ge-haliade-x-14-7mw-220-turbine-obtains-full-dnv-type-certificate"
+      ]
+    },
+    {
+      "oem": "GE",
+      "model": "GE 4.2-117",
+      "segment": "Onshore",
+      "platform": "4 MW Platform",
+      "rotor_diameter_m": 117.0,
+      "rated_power_mw": 4.2,
+      "power_class": null,
+      "source_urls": [
+        "https://www.gevernova.com/wind-power/wind-turbines/onshore-wind-turbines-4mw"
+      ]
+    },
+    {
+      "oem": "GE",
+      "model": "GE 2.8-127",
+      "segment": "Onshore",
+      "platform": "3 MW Platform",
+      "rotor_diameter_m": 127.0,
+      "rated_power_mw": 2.8,
+      "power_class": null,
+      "source_urls": [
+        "https://www.gevernova.com/wind-power/wind-turbines/onshore-wind-turbines-3mw"
+      ]
+    },
+    {
+      "oem": "GE",
+      "model": "GE 3.4-140",
+      "segment": "Onshore",
+      "platform": "3 MW Platform",
+      "rotor_diameter_m": 140.0,
+      "rated_power_mw": 3.4,
+      "power_class": null,
+      "source_urls": [
+        "https://www.gevernova.com/wind-power/wind-turbines/onshore-wind-turbines-3mw"
+      ]
+    },
+    {
+      "oem": "GE",
+      "model": "GE 3.8-154",
+      "segment": "Onshore",
+      "platform": "3 MW Platform",
+      "rotor_diameter_m": 154.0,
+      "rated_power_mw": 3.8,
+      "power_class": null,
+      "source_urls": [
+        "https://www.gevernova.com/wind-power/wind-turbines/onshore-wind-turbines-3mw"
+      ]
+    },
+    {
+      "oem": "GE",
+      "model": "GE 6.1-158",
+      "segment": "Onshore",
+      "platform": "6 MW Platform",
+      "rotor_diameter_m": 158.0,
+      "rated_power_mw": 6.1,
+      "power_class": null,
+      "source_urls": [
+        "https://www.gevernova.com/wind-power/wind-turbines/onshore-wind-turbines-6mw"
+      ]
+    },
+    {
+      "oem": "GE",
+      "model": "GE 6.0-164",
+      "segment": "Onshore",
+      "platform": "6 MW Platform",
+      "rotor_diameter_m": 164.0,
+      "rated_power_mw": 6.0,
+      "power_class": null,
+      "source_urls": [
+        "https://www.gevernova.com/wind-power/wind-turbines/onshore-wind-turbines-6mw"
+      ]
+    },
     {
       "oem": "Nordex",
       "model": "N117/3600",
