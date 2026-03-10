@@ -1192,7 +1192,18 @@ def render_turbine_portfolio_tab(catalog: pd.DataFrame, catalog_generated: str |
         return
 
     cat = catalog.copy()
-    cat = cat[cat["oem"].isin(selected_oems)]
+    catalog_oems = sorted(cat["oem"].dropna().astype(str).unique().tolist())
+    default_portfolio_oems = [o for o in selected_oems if o in catalog_oems]
+    if not default_portfolio_oems:
+        default_portfolio_oems = catalog_oems
+    portfolio_oems = st.multiselect(
+        "Portfolio OEMs",
+        options=catalog_oems,
+        default=default_portfolio_oems,
+        key="portfolio_oem_selector",
+    )
+    if portfolio_oems:
+        cat = cat[cat["oem"].isin(portfolio_oems)]
 
     seg_expanded = cat.assign(segment_item=cat["segment"].astype(str).str.split(", ")).explode("segment_item")
     segment_options = sorted(seg_expanded["segment_item"].dropna().unique().tolist())
