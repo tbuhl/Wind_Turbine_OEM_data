@@ -556,9 +556,9 @@ def render_data_freshness_badges(freshness: pd.DataFrame) -> None:
         latest_year = row.latest_order_year
 
         if pd.notna(generated):
-            cache_txt = generated.strftime("%Y-%m-%d %H:%M UTC")
+            cache_txt = generated.strftime("%Y-%m-%d")
         elif pd.notna(modified):
-            cache_txt = modified.strftime("%Y-%m-%d %H:%M")
+            cache_txt = modified.strftime("%Y-%m-%d")
         else:
             cache_txt = "-"
 
@@ -572,7 +572,7 @@ def render_data_freshness_badges(freshness: pd.DataFrame) -> None:
         parts.append(
             f"<span class='freshness-badge' style='border-color:{hex_to_rgba(color, 0.55)};"
             f"background:{hex_to_rgba(color, 0.14)};'>"
-            f"<strong>{oem}</strong> cache: {cache_txt} | latest order: {order_txt}"
+            f"<strong>{oem}</strong> latest order: {order_txt} | updated: {cache_txt}"
             "</span>"
         )
     if parts:
@@ -1188,7 +1188,6 @@ SANKEY_STAGE_COLORS = {
     "continent": "#38BDF8",
     "region": "#10B981",
     "country": "#F59E0B",
-    "platform": "#FB7185",
     "rotor": "#22D3EE",
     "rating": "#FB923C",
     "other": "#64748B",
@@ -1280,37 +1279,6 @@ def sankey_rating_bucket(value: Any) -> str:
     return "10+ MW"
 
 
-def sankey_platform_family(row: pd.Series) -> str:
-    oem = sankey_clean(row.get("oem"))
-    text = sankey_clean(row.get("platform"))
-    if text.lower() == "unknown":
-        return "Unknown platform"
-    if oem == "Vestas":
-        match = re.search(r"\bV(\d{2,3})[-/]", text, re.IGNORECASE)
-        if match:
-            return f"V{match.group(1)} family"
-    if oem == "Nordex":
-        match = re.search(r"\b(N|AW)(\d{2,3})", text, re.IGNORECASE)
-        if match:
-            return f"{match.group(1).upper()}{match.group(2)} family"
-    if oem == "Siemens Gamesa":
-        match = re.search(r"\bSG\s*\d+(?:\.\d+)?[-/](\d{2,3})", text, re.IGNORECASE)
-        if match:
-            return f"SG {match.group(1)}m family"
-        match = re.search(r"\bSWT[- ]?\d+(?:\.\d+)?[-/](\d{2,3})", text, re.IGNORECASE)
-        if match:
-            return f"SWT {match.group(1)}m family"
-    if oem == "GE":
-        match = re.search(r"GE\s*\d+(?:\.\d+)?[-/](\d{2,3})", text, re.IGNORECASE)
-        if match:
-            return f"GE {match.group(1)}m family"
-    if oem == "Suzlon":
-        match = re.search(r"\bS(\d{2,3})", text, re.IGNORECASE)
-        if match:
-            return f"S{match.group(1)} family"
-    return sankey_trim(text, 24)
-
-
 def sankey_axis_positions(count: int, top: float = 0.04, bottom: float = 0.84) -> list[float]:
     if count <= 1:
         return [0.45]
@@ -1323,10 +1291,10 @@ def sankey_node_color(stage: str, label: str) -> str:
     return sankey_rgba(SANKEY_STAGE_COLORS.get(stage, SANKEY_STAGE_COLORS["other"]), 0.96)
 
 
-def sankey_link_color(stage: str, label: str) -> str:
+def sankey_link_color(stage: str, label: str, alpha: float) -> str:
     if stage == "oem":
-        return sankey_rgba(OEM_COLORS.get(label, SANKEY_STAGE_COLORS["other"]), 0.34)
-    return sankey_rgba(SANKEY_STAGE_COLORS.get(stage, SANKEY_STAGE_COLORS["other"]), 0.26)
+        return sankey_rgba(OEM_COLORS.get(label, SANKEY_STAGE_COLORS["other"]), alpha)
+    return sankey_rgba(SANKEY_STAGE_COLORS.get(stage, SANKEY_STAGE_COLORS["other"]), alpha)
 
 
 def build_oem_sankey(
@@ -1389,6 +1357,12 @@ def build_oem_sankey(
     values: list[float] = []
     link_colors: list[str] = []
     customdata: list[str] = []
+    dark_mode = bool(st.session_state.get("dark_mode", False))
+    paper_bg = "#07111F" if dark_mode else "#FFFFFF"
+    font_color = "#F8FAFC" if dark_mode else "#0F172A"
+    subtitle_color = "#AFC0D4" if dark_mode else "#475569"
+    node_line = "rgba(255,255,255,0.60)" if dark_mode else "rgba(15,23,42,0.30)"
+    link_alpha = 0.34 if dark_mode else 0.42
 
     for (src_col, src_stage), (dst_col, dst_stage) in zip(steps[:-1], steps[1:], strict=False):
         grouped = data.groupby([src_col, dst_col], as_index=False)[value_col].sum()
@@ -1410,7 +1384,7 @@ def build_oem_sankey(
             sources.append(node_index[src_key])
             targets.append(node_index[dst_key])
             values.append(value)
-            link_colors.append(sankey_link_color(src_stage, src_label))
+            link_colors.append(sankey_link_color(src_stage, src_label, link_alpha))
             customdata.append(f"{value / 1000:,.2f} GW")
 
     if not values:
@@ -1423,7 +1397,7 @@ def build_oem_sankey(
                 node=dict(
                     pad=17,
                     thickness=21,
-                    line=dict(color="rgba(255,255,255,0.60)", width=0.8),
+                    line=dict(color=node_line, width=0.8),
                     label=labels,
                     color=colors,
                     x=xs,
@@ -1443,14 +1417,14 @@ def build_oem_sankey(
     )
     fig.update_layout(
         title=dict(
-            text=f"<b>{title}</b><br><span style='font-size:14px;color:#AFC0D4'>{subtitle}</span>",
+            text=f"<b>{title}</b><br><span style='font-size:14px;color:{subtitle_color}'>{subtitle}</span>",
             x=0.01,
             xanchor="left",
-            font=dict(size=24, color="#F8FAFC"),
+            font=dict(size=24, color=font_color),
         ),
-        paper_bgcolor="#07111F",
-        plot_bgcolor="#07111F",
-        font=dict(color="#F8FAFC", size=15, family="Nunito Sans, Segoe UI, sans-serif"),
+        paper_bgcolor=paper_bg,
+        plot_bgcolor=paper_bg,
+        font=dict(color=font_color, size=15, family="Nunito Sans, Segoe UI, sans-serif"),
         margin=dict(l=16, r=16, t=88, b=18),
         height=850,
     )
@@ -1459,7 +1433,7 @@ def build_oem_sankey(
 
 def render_sankey_tab(orders: pd.DataFrame, platforms: pd.DataFrame) -> None:
     st.subheader("Sankey Flows")
-    st.caption("Interactive MW flows based on the current sidebar filters. Sankey panels use a fixed high-contrast canvas for readability.")
+    st.caption("Interactive MW flows based on the current sidebar filters. Sankey panels follow the selected light/dark theme.")
 
     if orders.empty or platforms.empty:
         st.info("No filtered order/platform rows available for Sankey views.")
@@ -1468,20 +1442,18 @@ def render_sankey_tab(orders: pd.DataFrame, platforms: pd.DataFrame) -> None:
     flow_tabs = st.tabs(["OEM Market Gravity", "Technology Race Through Time"])
 
     with flow_tabs[0]:
-        geo = platforms.copy()
-        geo["slot_mw"] = pd.to_numeric(geo.get("slot_mw"), errors="coerce")
-        geo = geo.dropna(subset=["slot_mw"])
-        geo = geo[geo["slot_mw"] > 0].copy()
+        geo = orders.copy()
+        geo["size_mw"] = pd.to_numeric(geo.get("size_mw"), errors="coerce")
+        geo = geo.dropna(subset=["size_mw"])
+        geo = geo[geo["size_mw"] > 0].copy()
         if geo.empty:
-            st.info("No platform MW rows available for this Sankey.")
+            st.info("No order MW rows available for this Sankey.")
         else:
-            for column in ["continent", "region", "country", "platform"]:
+            for column in ["continent", "region", "country"]:
                 geo[column] = geo[column].map(sankey_clean)
             geo = geo[geo["continent"] != "Unknown"].copy()
-            geo["platform_family"] = geo.apply(sankey_platform_family, axis=1)
-            geo["region_top"] = sankey_top_or_other(geo, "region", "slot_mw", 16, "Other regions")
-            geo["country_top"] = sankey_top_or_other(geo, "country", "slot_mw", 20, "Other countries")
-            geo["platform_top"] = sankey_top_or_other(geo, "platform_family", "slot_mw", 18, "Other platform families")
+            geo["region_top"] = sankey_top_or_other(geo, "region", "size_mw", 16, "Other regions")
+            geo["country_top"] = sankey_top_or_other(geo, "country", "size_mw", 20, "Other countries")
             fig = build_oem_sankey(
                 geo,
                 [
@@ -1489,11 +1461,10 @@ def render_sankey_tab(orders: pd.DataFrame, platforms: pd.DataFrame) -> None:
                     ("continent", "continent"),
                     ("region_top", "region"),
                     ("country_top", "country"),
-                    ("platform_top", "platform"),
                 ],
-                "slot_mw",
+                "size_mw",
                 "OEM Market Gravity",
-                "Installed order MW flow by OEM, continent, region, top countries, and platform family",
+                "Announced order MW flow by OEM, continent, region, and top countries",
                 {"oem": SANKEY_OEM_ORDER},
                 {"oem": sankey_axis_positions(len(SANKEY_OEM_ORDER), 0.06, 0.72)},
             )
@@ -1501,7 +1472,7 @@ def render_sankey_tab(orders: pd.DataFrame, platforms: pd.DataFrame) -> None:
                 st.info("Not enough complete rows for this Sankey.")
             else:
                 st.plotly_chart(fig, width="stretch")
-                st.caption(f"Platform-linked basis: {geo['slot_mw'].sum() / 1000:,.1f} GW.")
+                st.caption(f"Announced order basis: {geo['size_mw'].sum() / 1000:,.1f} GW.")
 
     with flow_tabs[1]:
         tech = platforms.copy()
@@ -1514,8 +1485,6 @@ def render_sankey_tab(orders: pd.DataFrame, platforms: pd.DataFrame) -> None:
             tech["era"] = tech["order_year"].map(sankey_era_bucket)
             tech["rotor_class"] = tech["rotor_m"].map(sankey_rotor_bucket)
             tech["rating_class"] = tech["mw_rating"].map(sankey_rating_bucket)
-            tech["platform_family"] = tech.apply(sankey_platform_family, axis=1)
-            tech["platform_top"] = sankey_top_or_other(tech, "platform_family", "slot_mw", 20, "Other platform families")
             fig = build_oem_sankey(
                 tech,
                 [
@@ -1523,11 +1492,10 @@ def render_sankey_tab(orders: pd.DataFrame, platforms: pd.DataFrame) -> None:
                     ("oem", "oem"),
                     ("rotor_class", "rotor"),
                     ("rating_class", "rating"),
-                    ("platform_top", "platform"),
                 ],
                 "slot_mw",
                 "Technology Race Through Time",
-                "Chronological order eras flowing into OEMs, rotor classes, rated power classes, and platform families",
+                "Chronological order eras flowing into OEMs, rotor classes, and rated power classes",
                 {
                     "era": SANKEY_ERA_ORDER,
                     "oem": SANKEY_OEM_ORDER,
