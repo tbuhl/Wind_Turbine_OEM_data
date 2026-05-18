@@ -399,7 +399,8 @@ def hex_to_rgba(hex_color: str, alpha: float) -> str:
 
 
 @st.cache_data(show_spinner=False)
-def load_all_oem_data(_signature: str, cache_paths: dict[str, str]) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, list[str]]:
+def load_all_oem_data(signature: str, cache_paths: dict[str, str]) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, list[str]]:
+    _ = signature
     economy_frames: list[pd.DataFrame] = []
     order_frames: list[pd.DataFrame] = []
     platform_frames: list[pd.DataFrame] = []
@@ -511,7 +512,8 @@ def load_all_oem_data(_signature: str, cache_paths: dict[str, str]) -> tuple[pd.
 
 
 @st.cache_data(show_spinner=False)
-def load_cache_freshness(_signature: str, cache_paths: dict[str, str]) -> pd.DataFrame:
+def load_cache_freshness(signature: str, cache_paths: dict[str, str]) -> pd.DataFrame:
+    _ = signature
     rows: list[dict[str, Any]] = []
     for oem, path_txt in cache_paths.items():
         path = Path(path_txt)
@@ -581,7 +583,8 @@ def render_data_freshness_badges(freshness: pd.DataFrame) -> None:
 
 
 @st.cache_data(show_spinner=False)
-def load_turbine_catalog(_signature: str) -> tuple[pd.DataFrame, str | None, list[str]]:
+def load_turbine_catalog(signature: str) -> tuple[pd.DataFrame, str | None, list[str]]:
+    _ = signature
     if not TURBINE_CATALOG_FILE.exists():
         return pd.DataFrame(), None, []
 
