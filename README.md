@@ -1,8 +1,19 @@
 ﻿# Wind Turbine OEM Benchmark Dashboard
 
-Combined Streamlit dashboard comparing Vestas, Nordex, Siemens Gamesa, and Suzlon.
+Combined Streamlit dashboard comparing Vestas, Nordex, Siemens Gamesa, Suzlon and GE (Vernova Wind).
 
 ## What This Dashboard Includes
+- `OEM Briefing` (new)
+  - Latest reported quarter for all five OEMs side by side (revenue growth, profit margin, book-to-bill, backlog and cover, guidance), converted to EUR.
+  - Twelve auto-generated, number-backed findings and a watchlist (guidance, stale order lists, upcoming results).
+- `OEM Intelligence Lab` (new, choose a section at the top)
+  - `Momentum & Share`: share of announced MW, last-12-month and year-to-date momentum per OEM, a like-for-like cut-off date, order size and mega-order dependence.
+  - `Reported vs Announced`: how much of company-reported order intake (MW) each order list captures (Vestas, Nordex).
+  - `Product Race`: average rotor and rating of ordered turbines, 150 m-plus rotor share, leading platforms.
+  - `Market Battles`: largest markets with leader and runner-up, contested markets, continent mix, geographic concentration, country movers.
+  - `Accounts`: customers that bought from more than one OEM, customer dependence.
+  - `Financial Profile`: annual revenue, book-to-bill and margin in EUR.
+  - `Data Quality`: freshness, undisclosed customers, unknown platforms, comparability notes.
 - `Overall Economics`
   - Revenue and order-intake value comparisons (normalized to mEUR where possible).
   - Order backlog comparison where metrics are available.
@@ -22,6 +33,11 @@ Combined Streamlit dashboard comparing Vestas, Nordex, Siemens Gamesa, and Suzlo
   - Model table with source links.
 
 ## Data Inputs
+Cross-OEM intelligence data (tracked in `data/`):
+- `oem_latest_results.json`: latest reported quarter per OEM (company releases; sources listed per OEM).
+- `nordex_reported_intake.json`: Nordex reported Projects order intake in MW (quarterly and annual).
+- `fx_annual.json`: average EUR/USD and EUR/INR per calendar year (ECB reference rates via Frankfurter); the latest year is year to date.
+
 Primary cache files (included in this repo for deployment):
 - `data_cache/vestas_parsed_data.pkl`
 - `data_cache/nordex_parsed_data.pkl`
@@ -48,6 +64,13 @@ Sources used in builder:
 - Siemens Gamesa onshore/offshore pages
 - Suzlon S-series turbine pages
 
+## Refresh
+```powershell
+python tools/sync_caches.py     # copy the latest parsed caches from the per-OEM projects (Vestas from Vestas_sales_claude)
+python -m pytest tests -q       # tests for the cross-OEM analytics
+```
+After syncing, update `data/oem_latest_results.json` when new quarterly results are published.
+
 ## Run Locally
 ```powershell
 python -m pip install -r requirements.txt
@@ -64,4 +87,6 @@ If using a local virtual environment:
 - The dashboard shows the latest handled date/year from loaded datasets.
 - Economics metrics are mapped by metric-name heuristics; units are normalized where possible.
 - If one OEM does not report a metric in the same way, that series is omitted for that OEM.
-- For Streamlit Community Cloud, keep the four `data_cache/*.pkl` files committed in this repository.
+- For Streamlit Community Cloud, keep the five `data_cache/*.pkl` files committed in this repository.
+- Announced MW comes from each OEM's order list. The lists are not equally complete (see `Reported vs Announced`), so shares are shares of announced MW, not market share.
+- Revenue and order-intake comparisons convert GE (USD) and Suzlon (INR) to EUR; Siemens Gamesa's fiscal year ends in September and Suzlon's in March.

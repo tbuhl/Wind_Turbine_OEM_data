@@ -1,0 +1,247 @@
+{
+ "source": "Nordex Group press releases on quarterly and annual order intake (Projects segment, excluding service), nordex-online.com",
+ "unit": "MW",
+ "retrieved": "2026-10-13",
+ "annual_notes": "2017 = sum of the four reported quarters; 2021 and 2022 are the rounded GW figures in the full-year releases (7.95 GW, 6.33 GW); 2025 = sum of the four reported quarters; 2019 Q2 and Q3 were not found as separate figures (H1/9M releases), so 2019 has annual, Q1 and Q4 only",
+ "annual": {
+  "2017": 2735.5,
+  "2018": 4754.0,
+  "2019": 6207.0,
+  "2020": 6020.0,
+  "2021": 7950.0,
+  "2022": 6330.0,
+  "2023": 7358.0,
+  "2024": 8336.0,
+  "2025": 10214.0
+ },
+ "quarterly": [
+  {
+   "year": 2017,
+   "quarter": 1,
+   "mw": 368.0,
+   "basis": "reported"
+  },
+  {
+   "year": 2017,
+   "quarter": 2,
+   "mw": 565.5,
+   "basis": "reported"
+  },
+  {
+   "year": 2017,
+   "quarter": 3,
+   "mw": 203.4,
+   "basis": "reported"
+  },
+  {
+   "year": 2017,
+   "quarter": 4,
+   "mw": 1598.6,
+   "basis": "reported"
+  },
+  {
+   "year": 2018,
+   "quarter": 1,
+   "mw": 1007.5,
+   "basis": "reported"
+  },
+  {
+   "year": 2018,
+   "quarter": 2,
+   "mw": 1089.8,
+   "basis": "reported"
+  },
+  {
+   "year": 2018,
+   "quarter": 3,
+   "mw": 974.0,
+   "basis": "reported"
+  },
+  {
+   "year": 2018,
+   "quarter": 4,
+   "mw": 1679.0,
+   "basis": "reported"
+  },
+  {
+   "year": 2019,
+   "quarter": 1,
+   "mw": 1035.0,
+   "basis": "reported"
+  },
+  {
+   "year": 2019,
+   "quarter": 4,
+   "mw": 1477.0,
+   "basis": "reported"
+  },
+  {
+   "year": 2020,
+   "quarter": 1,
+   "mw": 1644.0,
+   "basis": "reported"
+  },
+  {
+   "year": 2020,
+   "quarter": 2,
+   "mw": 886.0,
+   "basis": "derived: FY 6,020 less other quarters"
+  },
+  {
+   "year": 2020,
+   "quarter": 3,
+   "mw": 1229.0,
+   "basis": "reported"
+  },
+  {
+   "year": 2020,
+   "quarter": 4,
+   "mw": 2261.0,
+   "basis": "reported"
+  },
+  {
+   "year": 2021,
+   "quarter": 1,
+   "mw": 1247.0,
+   "basis": "reported"
+  },
+  {
+   "year": 2021,
+   "quarter": 2,
+   "mw": 1534.0,
+   "basis": "reported"
+  },
+  {
+   "year": 2021,
+   "quarter": 3,
+   "mw": 1829.0,
+   "basis": "reported"
+  },
+  {
+   "year": 2021,
+   "quarter": 4,
+   "mw": 3340.0,
+   "basis": "derived: FY 7,950 less Q1-Q3"
+  },
+  {
+   "year": 2022,
+   "quarter": 1,
+   "mw": 1165.0,
+   "basis": "reported"
+  },
+  {
+   "year": 2022,
+   "quarter": 2,
+   "mw": 1836.0,
+   "basis": "reported"
+  },
+  {
+   "year": 2022,
+   "quarter": 3,
+   "mw": 1441.0,
+   "basis": "reported"
+  },
+  {
+   "year": 2022,
+   "quarter": 4,
+   "mw": 1888.0,
+   "basis": "derived: FY 6,330 less Q1-Q3"
+  },
+  {
+   "year": 2023,
+   "quarter": 1,
+   "mw": 1021.0,
+   "basis": "reported"
+  },
+  {
+   "year": 2023,
+   "quarter": 2,
+   "mw": 1620.0,
+   "basis": "derived: H1 2,641 less Q1"
+  },
+  {
+   "year": 2023,
+   "quarter": 3,
+   "mw": 2251.0,
+   "basis": "derived: 9M 4,892 less H1"
+  },
+  {
+   "year": 2023,
+   "quarter": 4,
+   "mw": 2466.0,
+   "basis": "derived: FY 7,358 less 9M"
+  },
+  {
+   "year": 2024,
+   "quarter": 1,
+   "mw": 2086.0,
+   "basis": "reported"
+  },
+  {
+   "year": 2024,
+   "quarter": 2,
+   "mw": 1271.0,
+   "basis": "reported"
+  },
+  {
+   "year": 2024,
+   "quarter": 3,
+   "mw": 1726.0,
+   "basis": "reported"
+  },
+  {
+   "year": 2024,
+   "quarter": 4,
+   "mw": 3253.0,
+   "basis": "reported"
+  },
+  {
+   "year": 2025,
+   "quarter": 1,
+   "mw": 2182.0,
+   "basis": "reported"
+  },
+  {
+   "year": 2025,
+   "quarter": 2,
+   "mw": 2310.0,
+   "basis": "reported"
+  },
+  {
+   "year": 2025,
+   "quarter": 3,
+   "mw": 2170.0,
+   "basis": "reported"
+  },
+  {
+   "year": 2025,
+   "quarter": 4,
+   "mw": 3552.0,
+   "basis": "reported"
+  },
+  {
+   "year": 2026,
+   "quarter": 1,
+   "mw": 1869.0,
+   "basis": "reported"
+  },
+  {
+   "year": 2026,
+   "quarter": 2,
+   "mw": 3054.0,
+   "basis": "reported"
+  },
+  {
+   "year": 2026,
+   "quarter": 3,
+   "mw": 2810.0,
+   "basis": "reported"
+  }
+ ],
+ "asp_meur_per_mw": {
+  "2024": 0.9,
+  "H1 2025": 0.92,
+  "H1 2026": 0.95
+ },
+ "asp_note": "Average selling price (EUR m per MW) as stated in the order-intake releases for FY2024 (0.90), H1 2025 (0.92) and H1 2026 (0.95)"
+}

@@ -11,6 +11,9 @@ import plotly.express as px
 import plotly.graph_objects as go
 import streamlit as st
 
+from intel.analysis import OEM_COLORS, load_fx
+from intel.ui import get_bundle, render_briefing, render_lab
+
 APP_TITLE = "Wind Turbine OEM Benchmark Dashboard"
 APP_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = APP_DIR.parent
@@ -18,6 +21,7 @@ PROJECT_ROOT = APP_DIR.parent
 OEM_CACHE_PATH_CANDIDATES = {
     "Vestas": [
         APP_DIR / "data_cache" / "vestas_parsed_data.pkl",
+        PROJECT_ROOT / "Vestas_sales_claude" / "data_cache" / "vestas_parsed_data.pkl",
         PROJECT_ROOT / "Vestas_sales" / "data_cache" / "vestas_parsed_data.pkl",
     ],
     "Nordex": [
@@ -40,13 +44,6 @@ OEM_CACHE_PATH_CANDIDATES = {
 
 TURBINE_CATALOG_FILE = APP_DIR / "data" / "oem_turbine_catalog.json"
 
-OEM_COLORS = {
-    "Vestas": "#2F8FCE",
-    "Nordex": "#F18F01",
-    "Siemens Gamesa": "#5E8F49",
-    "Suzlon": "#D1495B",
-    "GE": "#9333EA",
-}
 
 
 def apply_page_style(dark_mode: bool) -> None:
@@ -632,8 +629,19 @@ def metric_series(economy_oem: pd.DataFrame, token_options: list[list[str]], sca
     return out
 
 
+def usd_to_eur(frame: pd.DataFrame, fx: pd.DataFrame) -> pd.DataFrame:
+    """Convert a year/value frame from USD m to EUR m with the average rate of each calendar year."""
+    if frame.empty or fx.empty:
+        return frame
+    out = frame.copy()
+    rate = out["year"].map(lambda y: fx["eur_usd"].get(int(y), fx["eur_usd"].iloc[-1]))
+    out["value"] = out["value"] / rate
+    return out
+
+
 def build_economy_comparison(economy: pd.DataFrame) -> pd.DataFrame:
     rows: list[pd.DataFrame] = []
+    fx = load_fx()
 
     for oem, frame in economy.groupby("oem"):
         econ = frame.copy()
@@ -647,9 +655,11 @@ def build_economy_comparison(economy: pd.DataFrame) -> pd.DataFrame:
         }
         revenue_tokens = revenue_tokens_map.get(oem, [["revenue", "meur"], ["revenue"]])
         revenue = metric_series(econ, revenue_tokens, scale=1.0)
+        if oem == "GE":
+            revenue = usd_to_eur(revenue, fx)
         if not revenue.empty:
             revenue["oem"] = oem
-            revenue["metric_name"] = "Revenue (mEUR, as reported)"
+            revenue["metric_name"] = "Revenue (mEUR)"
             rows.append(revenue)
 
         intake_map: dict[str, tuple[list[list[str]], float]] = {
@@ -664,6 +674,8 @@ def build_economy_comparison(economy: pd.DataFrame) -> pd.DataFrame:
         if oem in intake_map:
             intake_tokens, intake_scale = intake_map[oem]
             intake = metric_series(econ, intake_tokens, scale=intake_scale)
+            if oem == "GE":
+                intake = usd_to_eur(intake, fx)
             if not intake.empty:
                 intake["oem"] = oem
                 intake["metric_name"] = "Order intake value (mEUR, normalized)"
@@ -709,7 +721,7 @@ def build_economy_comparison(economy: pd.DataFrame) -> pd.DataFrame:
                 backlog["metric_name"] = "Order backlog value (mEUR, combined)"
                 rows.append(backlog)
         elif oem == "GE":
-            total = metric_series(econ, [["totalorderbacklogusdm"], ["order", "backlog", "usd"]], scale=1.0)
+            total = usd_to_eur(metric_series(econ, [["totalorderbacklogusdm"], ["order", "backlog", "usd"]], scale=1.0), fx)
             if not total.empty:
                 total["oem"] = oem
                 total["metric_name"] = "Order backlog value (mEUR, combined)"
@@ -889,11 +901,11 @@ def render_overall_tab(economy: pd.DataFrame, orders: pd.DataFrame) -> None:
     c1, c2 = st.columns(2)
     with c1:
         plot_line(
-            econ_comp[econ_comp["metric_name"] == "Revenue (mEUR, as reported)"],
+            econ_comp[econ_comp["metric_name"] == "Revenue (mEUR)"],
             "year",
             "value",
             "oem",
-            "Revenue Comparison",
+            "Revenue Comparison (GE converted from USD)",
             "mEUR",
         )
     with c2:
@@ -1749,6 +1761,11 @@ def render_turbine_portfolio_tab(catalog: pd.DataFrame, catalog_generated: str |
 def render_information_page() -> None:
     st.subheader("Information")
     st.markdown("**Data source**")
+    st.write(
+        "Order lists, platforms and annual economics come from the per-OEM dashboards' parsed caches (`data_cache/`). The latest reported quarter per OEM is in "
+        "`data/oem_latest_results.json` (company results releases), Nordex's reported order intake in `data/nordex_reported_intake.json`, and EUR conversion rates in "
+        "`data/fx_annual.json` (ECB reference rates via Frankfurter)."
+    )
     st.write("This dashboard is build on public available data.")
 
     st.markdown("**How to use and navigate**")
@@ -1756,7 +1773,7 @@ def render_information_page() -> None:
         "Use the sidebar filters to narrow years, OEMs, and minimum order size."
     )
     st.write(
-        "Navigate tabs from high-level trends (Overall Economics) to deep dives (Sizes/Service, Geography, Sankey flows, and Existing Turbine Portfolio)."
+        "Start with the OEM Briefing and OEM Intelligence Lab for cross-OEM findings, then use the tabs from high-level trends (Overall Economics) to deep dives (Sizes/Service, Geography, Sankey flows, and Existing Turbine Portfolio)."
     )
 
     st.markdown("**Disclaimer**")
@@ -1878,6 +1895,8 @@ def main() -> None:
 
     tabs = st.tabs(
         [
+            "OEM Briefing",
+            "OEM Intelligence Lab",
             "Overall Economics",
             "Sizes and Service",
             "Country/Region/Continent",
@@ -1887,22 +1906,30 @@ def main() -> None:
         ]
     )
 
+    bundle = get_bundle(economy_all, orders_all, platforms_all)
+
     with tabs[0]:
-        render_overall_tab(economy_f, orders_f)
+        render_briefing(bundle)
 
     with tabs[1]:
-        render_sizes_tab(orders_f, platforms_f)
+        render_lab(bundle)
 
     with tabs[2]:
-        render_geo_tab(orders_f)
+        render_overall_tab(economy_f, orders_f)
 
     with tabs[3]:
-        render_sankey_tab(orders_f, platforms_f)
+        render_sizes_tab(orders_f, platforms_f)
 
     with tabs[4]:
-        render_turbine_portfolio_tab(turbine_catalog, catalog_generated, failed_sources, selected_oems)
+        render_geo_tab(orders_f)
 
     with tabs[5]:
+        render_sankey_tab(orders_f, platforms_f)
+
+    with tabs[6]:
+        render_turbine_portfolio_tab(turbine_catalog, catalog_generated, failed_sources, selected_oems)
+
+    with tabs[7]:
         render_information_page()
 
 

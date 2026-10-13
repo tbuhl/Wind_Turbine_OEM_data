@@ -1,0 +1,89 @@
+{
+ "source": "Frankfurter API (ECB reference rates), calendar-year averages of daily rates; the latest year is year-to-date",
+ "rates": [
+  {
+   "year": 2015,
+   "eur_usd": 1.0887,
+   "eur_inr": 72.022,
+   "days": 1,
+   "through": "2015-12-31"
+  },
+  {
+   "year": 2016,
+   "eur_usd": 1.1069,
+   "eur_inr": 74.372,
+   "days": 257,
+   "through": "2016-12-30"
+  },
+  {
+   "year": 2017,
+   "eur_usd": 1.1297,
+   "eur_inr": 73.532,
+   "days": 255,
+   "through": "2017-12-29"
+  },
+  {
+   "year": 2018,
+   "eur_usd": 1.181,
+   "eur_inr": 80.733,
+   "days": 255,
+   "through": "2018-12-31"
+  },
+  {
+   "year": 2019,
+   "eur_usd": 1.1195,
+   "eur_inr": 78.836,
+   "days": 255,
+   "through": "2019-12-31"
+  },
+  {
+   "year": 2020,
+   "eur_usd": 1.1422,
+   "eur_inr": 84.639,
+   "days": 257,
+   "through": "2020-12-31"
+  },
+  {
+   "year": 2021,
+   "eur_usd": 1.1827,
+   "eur_inr": 87.439,
+   "days": 258,
+   "through": "2021-12-31"
+  },
+  {
+   "year": 2022,
+   "eur_usd": 1.053,
+   "eur_inr": 82.686,
+   "days": 257,
+   "through": "2022-12-30"
+  },
+  {
+   "year": 2023,
+   "eur_usd": 1.0813,
+   "eur_inr": 89.3,
+   "days": 255,
+   "through": "2023-12-29"
+  },
+  {
+   "year": 2024,
+   "eur_usd": 1.0824,
+   "eur_inr": 90.556,
+   "days": 256,
+   "through": "2024-12-31"
+  },
+  {
+   "year": 2025,
+   "eur_usd": 1.13,
+   "eur_inr": 98.524,
+   "days": 255,
+   "through": "2025-12-31"
+  },
+  {
+   "year": 2026,
+   "eur_usd": 1.1595,
+   "eur_inr": 109.035,
+   "days": 199,
+   "through": "2026-10-12"
+  }
+ ]
+}

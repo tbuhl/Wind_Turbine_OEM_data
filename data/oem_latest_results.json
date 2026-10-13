@@ -1,0 +1,64 @@
+{
+ "description": "Latest reported quarter per OEM, April-June 2026 (calendar Q2; SGRE = Q3 FY26, Suzlon = Q1 FY27). Figures are as reported in each company's own definition and currency; the app converts revenue to EUR with the average daily rate of the year to date (data/fx_annual.json).",
+ "retrieved": "2026-10-13",
+ "period_label": "Apr-Jun 2026",
+ "oems": {
+  "Vestas": {
+   "period": "Q2 2026", "period_end": "2026-06-30", "currency": "EUR", "unit": "m",
+   "revenue": 4723, "revenue_yoy": 0.261,
+   "profit_measure": "EBIT before special items", "profit": 446, "profit_prior": 57,
+   "orders_mw": 3349, "orders_mw_yoy": 0.67, "orders_value": 3400,
+   "backlog_value": 36000, "backlog_note": "wind turbine order backlog EUR 36.0bn; combined with service agreements EUR 76.9bn",
+   "guidance": "2026: revenue EUR 20-22bn; EBIT margin before special items 7-9% (raised from 6-8%)",
+   "also": "Q1 2026: revenue EUR 3,966m, EBIT before special items EUR 127m (3.2%), orders 4,504 MW.",
+   "source": "Vestas company announcement, Interim Report Q2 2026 (12 Aug 2026) and Q1 2026",
+   "source_url": "https://www.inderes.fi/en/releases/vestas-interim-report-second-quarter-2026",
+   "orders_value_note": "EUR 3.4bn as stated in the report summary (rounded)"
+  },
+  "Nordex": {
+   "period": "Q2 2026", "period_end": "2026-06-30", "currency": "EUR", "unit": "m",
+   "revenue": 2178.8, "revenue_yoy": 0.163,
+   "profit_measure": "EBITDA", "profit": 223.8, "profit_prior": 108.2,
+   "orders_mw": 3054, "orders_mw_yoy": 0.322, "orders_value": 3495.4,
+   "backlog_value": 18400, "backlog_note": "total order book EUR 18.4bn (projects EUR 11.6bn, service EUR 6.8bn)",
+   "guidance": "2026 guidance confirmed (a third-party summary cites sales EUR 8.2-9.0bn and EBITDA margin 8-11%; not checked against the primary release)",
+   "also": "H1 2026: sales EUR 3,766.5m (+13.8%), EBITDA EUR 354.5m (9.4%). Order intake value is Projects EUR 2,976.5m plus Service EUR 518.9m.",
+   "source": "Nordex Group press release, Q2/2026 results (29 Jul 2026)",
+   "source_url": "https://www.nordex-online.com/es/2026/07/nordex-group-achieves-double-digit-ebitda-margin-in-q2-2026-strong-order-intake-growth-and-positive-free-cash-flow/"
+  },
+  "Siemens Gamesa": {
+   "period": "Q3 FY26", "period_end": "2026-06-30", "currency": "EUR", "unit": "m",
+   "revenue": 2743, "revenue_yoy": 0.095, "revenue_yoy_note": "nominal; Siemens Energy states +13.5% comparable",
+   "profit_measure": "Profit before special items", "profit": 75, "profit_prior": -438,
+   "orders_mw": null, "orders_mw_yoy": null, "orders_value": 1050,
+   "backlog_value": 31000, "backlog_note": "order backlog EUR 31bn",
+   "guidance": "FY2026: comparable revenue growth 3-5% (raised from 1-3%); profit margin before special items around break-even",
+   "also": "First profit before special items since the segment was reported separately in this series; 9M FY26 comparable revenue growth +5.8%.",
+   "source": "Siemens Energy quarterly earnings releases, segment Siemens Gamesa",
+   "source_url": "https://www.siemens-energy.com"
+  },
+  "Suzlon": {
+   "period": "Q1 FY27", "period_end": "2026-06-30", "currency": "INR", "unit": "crore",
+   "revenue": 3819, "revenue_yoy": 0.225,
+   "profit_measure": "EBITDA", "profit": 595, "profit_prior": 599,
+   "orders_mw": 1000, "orders_mw_yoy": null, "orders_value": null,
+   "deliveries_mw": 506, "deliveries_mw_yoy": 0.14,
+   "backlog_mw": 6100, "backlog_note": "order book 6,100 MW",
+   "guidance": "FY2027: EBITDA margin 17-18%",
+   "also": "Management cites temporary logistics disruption from the geopolitical situation and a change of scope and segment mix.",
+   "source": "Suzlon quarterly results coverage (Jul 2026)",
+   "source_url": "https://www.suzlon.com"
+  },
+  "GE": {
+   "period": "Q2 2026", "period_end": "2026-06-30", "currency": "USD", "unit": "m",
+   "revenue": 2026, "revenue_yoy": -0.098,
+   "profit_measure": "Wind segment EBITDA", "profit": -275, "profit_prior": -165,
+   "orders_mw": null, "orders_mw_yoy": null, "orders_value": 1249, "orders_value_yoy": -0.39,
+   "backlog_value": 21630, "backlog_note": "end-2025 (backlog is reported annually only)",
+   "guidance": "2026: Wind segment EBITDA loss of about USD 400m; organic revenue down low double digits",
+   "also": "H1 2026 EBITDA -USD 657m against -USD 311m a year earlier.",
+   "source": "GE Vernova quarterly earnings releases, Wind segment",
+   "source_url": "https://www.gevernova.com/investors"
+  }
+ }
+}
