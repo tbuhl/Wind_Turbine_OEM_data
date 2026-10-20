@@ -34,6 +34,7 @@ class Bundle:
     fin: pd.DataFrame
     scoreboard: pd.DataFrame
     quality: pd.DataFrame
+    price: pd.DataFrame
     since: int = SINCE_RECENT
 
 
@@ -51,5 +52,5 @@ def build_bundle(economy: pd.DataFrame, orders: pd.DataFrame, platforms: pd.Data
         product=A.product_table(platforms), top_platforms=A.top_platforms(platforms, SINCE_RECENT), matrix=matrix,
         battles=A.battle_table(matrix), geo=A.geography_profile(o, SINCE_RECENT), continents=A.continent_mix(o, SINCE_RECENT),
         shared=A.shared_customers(o, 2, SINCE_RECENT), dependence=A.customer_dependence(o, SINCE_RECENT),
-        fin=A.financial_table(economy, fx), scoreboard=A.latest_scoreboard(latest, fx), quality=A.quality_table(o, platforms, economy, today),
+        fin=A.financial_table(economy, fx), scoreboard=A.latest_scoreboard(latest, fx), quality=A.quality_table(o, platforms, economy, today), price=A.price_table(economy, fx),
     )

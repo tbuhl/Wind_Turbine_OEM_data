@@ -13,7 +13,7 @@ from . import analysis as A
 from .bundle import Bundle, build_bundle
 from .insights import eur, generate_insights, mw, pc, watchlist
 
-LAB_SECTIONS = ["Momentum & Share", "Reported vs Announced", "Product Race", "Market Battles", "Accounts", "Financial Profile", "Data Quality"]
+LAB_SECTIONS = ["Momentum & Share", "Reported vs Announced", "Price per MW", "Product Race", "Market Battles", "Accounts", "Financial Profile", "Data Quality"]
 TONE_COLORS = {"up": "#16A34A", "down": "#DC2626", "warn": "#D97706", "neutral": "#64748B"}
 
 
@@ -23,7 +23,7 @@ def _mtime(path) -> str:
 
 def _signature(economy, orders, platforms) -> str:
     return "|".join([str(len(orders)), str(orders["order_date"].max()), f"{orders['size_mw'].sum():.1f}", str(len(platforms)), f"{economy['value'].sum():.1f}",
-                     _mtime(A.DATA_DIR / "oem_latest_results.json"), _mtime(A.DATA_DIR / "fx_annual.json"), _mtime(A.DATA_DIR / "nordex_reported_intake.json"),
+                     _mtime(A.DATA_DIR / "oem_latest_results.json"), _mtime(A.DATA_DIR / "fx_annual.json"), _mtime(A.DATA_DIR / "nordex_reported_intake.json"), _mtime(A.DATA_DIR / "price_inputs.json"),
                      str(pd.Timestamp.today().normalize())])
 
 
@@ -174,7 +174,7 @@ def render_lab(b: Bundle) -> None:
     else:
         choice = st.radio("Section", LAB_SECTIONS, horizontal=True, key="oem_lab_section", label_visibility="collapsed")
     choice = choice or LAB_SECTIONS[0]
-    {"Momentum & Share": _momentum, "Reported vs Announced": _coverage, "Product Race": _product, "Market Battles": _battles,
+    {"Momentum & Share": _momentum, "Reported vs Announced": _coverage, "Price per MW": _price, "Product Race": _product, "Market Battles": _battles,
      "Accounts": _accounts, "Financial Profile": _financial, "Data Quality": _quality}[choice](b)
 
 
@@ -251,6 +251,39 @@ def _coverage(b: Bundle) -> None:
         _show(fig, "cov_nordex_q", 340)
     st.caption("Why the gap: orders from undisclosed customers, framework call-offs and small orders are not announced one by one. Siemens Gamesa and GE are not shown because they do not publish order intake in MW.")
     _table(c.round(3), "Data table: coverage")
+
+
+def _price(b: Bundle) -> None:
+    colors = _colors()
+    _scope("Full dataset. All figures are estimates: rough EUR m per MW on two bases; read the notes before comparing companies.")
+    p = b.price
+    if p.empty:
+        st.info("No price data available.")
+        return
+    asp = p[p["basis"] == "Order-intake ASP"]
+    c1, c2 = st.columns(2)
+    with c1:
+        fig = px.line(asp, x="year", y="eur_m_per_mw", color="oem", color_discrete_map=colors, markers=True, hover_data=["period", "note"], title="Order-intake price, estimate (EUR m per MW)")
+        fig.update_layout(xaxis_title="", yaxis_title="EUR m / MW")
+        _show(fig, "price_asp", 420)
+    with c2:
+        rev = p[p["basis"] == "Revenue per delivered MW (3-year pooled)"]
+        one = p[(p["basis"] == "Revenue per delivered MW") & (p["oem"] == "Suzlon")]
+        fig = px.line(rev, x="year", y="eur_m_per_mw", color="oem", color_discrete_map=colors, markers=True, hover_data=["note"], title="Revenue per delivered MW, estimate, 3-year pooled (EUR m per MW)")
+        if len(one):
+            fig.add_scatter(x=one["year"], y=one["eur_m_per_mw"], mode="markers+text", text=one["period"].str.split(" ").str[0], textposition="top center", name="Suzlon (incl. O&M)", marker=dict(color=colors["Suzlon"], size=11, symbol="diamond"))
+        fig.update_layout(xaxis_title="", yaxis_title="EUR m / MW")
+        _show(fig, "price_rev", 420)
+    latest = p.sort_values("year").groupby(["oem", "basis"]).tail(1)
+    view = latest[latest["basis"] != "Revenue per delivered MW (3-year pooled)"].sort_values(["basis", "eur_m_per_mw"], ascending=[True, False])
+    st.markdown("**Latest estimate per OEM and basis**")
+    st.dataframe(pd.DataFrame({"OEM": view["oem"], "Basis": view["basis"], "Period": view["period"], "EUR m per MW": view["eur_m_per_mw"].round(2), "Note": view["note"]}), width="stretch", hide_index=True)
+    st.markdown(
+        "- **Order-intake price** (an estimate of the turbine price, based on what each company reports for new turbine orders): Vestas (annual reports), Nordex (results releases, Projects segment) and Siemens Gamesa (onshore, last reported for 2022). It is the best like-for-like figure available.\n"
+        "- **Revenue per delivered MW** is turbine or project revenue divided by MW delivered. It lags orders by one to two years and is noisy year to year, so the pooled three-year version is charted. It excludes service for Vestas and Siemens Gamesa, but includes service for Nordex and Suzlon, so it overstates their turbine price.\n"
+        "- **Suzlon** does not report a price; revenue per delivered MW also includes O&M. **GE** does not disclose MW, so it has no price. Prices are not adjusted for scope (turbine only vs turnkey), offshore mix or currency timing."
+    )
+    _table(p.round(3), "Data table: price per MW")
 
 
 def _product(b: Bundle) -> None:

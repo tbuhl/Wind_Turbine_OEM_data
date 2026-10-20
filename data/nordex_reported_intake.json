@@ -239,9 +239,13 @@
   }
  ],
  "asp_meur_per_mw": {
+  "2022": 0.84,
+  "2023": 0.84,
   "2024": 0.9,
+  "2025": 0.91,
   "H1 2025": 0.92,
-  "H1 2026": 0.95
+  "H1 2026": 0.95,
+  "Q2 2026": 0.97
  },
- "asp_note": "Average selling price (EUR m per MW) as stated in the order-intake releases for FY2024 (0.90), H1 2025 (0.92) and H1 2026 (0.95)"
+ "asp_note": "Average selling price (EUR m per MW) as stated in Nordex's order-intake and results releases: FY2022-2023 (0.84), FY2024 (0.90), FY2025 (0.91), H1 2025 (0.92), Q2 2026 (0.97) and H1 2026 (0.95)"
 }

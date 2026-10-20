@@ -338,3 +338,72 @@ def quality_table(orders: pd.DataFrame, platforms: pd.DataFrame, economy: pd.Dat
             "duplicates": int(g.duplicated(["order_date", "size_mw", "country", "customer"]).sum()),
         })
     return pd.DataFrame(rows)
+
+
+# ---------------------------------------------------------------- price per MW
+def load_price_inputs(path: Path | None = None) -> dict[str, Any]:
+    return _read_json(path or DATA_DIR / "price_inputs.json")
+
+
+def price_table(economy: pd.DataFrame, fx: pd.DataFrame, inputs: dict[str, Any] | None = None) -> pd.DataFrame:
+    """Rough EUR m per MW by OEM and year on two bases.
+
+    * ``Order-intake ASP`` - the turbine price the company itself reports for new orders (Vestas, Nordex, Siemens Gamesa onshore to 2022).
+    * ``Revenue per delivered MW`` - turbine / project revenue divided by MW delivered. Excludes service for Vestas and Siemens Gamesa;
+      includes service for Nordex and Suzlon, so it overstates their turbine price.
+    GE does not disclose MW, so it has no price.
+    """
+    inputs = inputs if inputs is not None else load_price_inputs()
+    rows: list[dict[str, Any]] = []
+
+    def series(oem: str, metric: str) -> pd.Series:
+        e = economy[(economy["oem"] == oem) & (economy["metric"] == metric)].dropna(subset=["value"])
+        return e.groupby("year")["value"].mean() if len(e) else pd.Series(dtype=float)
+
+    def add(oem: str, year: int, basis: str, value: float, note: str = "", period: str | None = None) -> None:
+        if pd.notna(value) and value > 0:
+            rows.append({"oem": oem, "year": int(year), "period": period or str(year), "basis": basis, "eur_m_per_mw": float(value), "note": note})
+
+    def pooled(oem: str, num: pd.Series, den: pd.Series, note: str) -> None:
+        """Trailing three-year pooled ratio (sum of revenue / sum of MW) to smooth timing between revenue and deliveries."""
+        both = pd.concat([num.rename("n"), den.rename("d")], axis=1).dropna()
+        both = both[both["d"] > 0]
+        for y in both.index:
+            w = both.loc[y - 2:y]
+            if len(w) == 3:
+                add(oem, int(y), "Revenue per delivered MW (3-year pooled)", w["n"].sum() / w["d"].sum(), note)
+
+    for y, v in series("Vestas", "average MW price [mEUR/MW]").items():
+        add("Vestas", int(y), "Order-intake ASP", v, "annual report, turbines")
+    proj, dlv = series("Vestas", "sales of projects"), series("Vestas", "deliveries [MW]")
+    for y in proj.index.intersection(dlv.index):
+        add("Vestas", int(y), "Revenue per delivered MW", proj[y] / dlv[y], "sales of projects / deliveries, excl. service")
+    pooled("Vestas", proj, dlv, "sales of projects / deliveries, excl. service")
+
+    for y, v in (inputs.get("nordex_asp_eur_m_per_mw") or {}).items():
+        add("Nordex", int(y), "Order-intake ASP", v, "results release, Projects segment")
+    n26 = inputs.get("nordex_2026") or {}
+    if n26.get("mw"):
+        add("Nordex", 2026, "Order-intake ASP", n26["value_eur_m"] / n26["mw"], "Projects order value / MW", period=n26.get("label", "H1 2026"))
+    sales, inst = series("Nordex", "Sales"), series("Nordex", "Installed capacity [MW]")
+    for y in sales.index.intersection(inst.index):
+        add("Nordex", int(y), "Revenue per delivered MW", sales[y] / inst[y], "total sales / installed MW, incl. service")
+    pooled("Nordex", sales, inst, "total sales / installed MW, incl. service")
+
+    asp = pd.concat([series("Siemens Gamesa", "Average selling price (onshore)"), series("Siemens Gamesa", "average selling price onshore")]).groupby(level=0).first()
+    for y, v in asp.items():
+        add("Siemens Gamesa", int(y), "Order-intake ASP", v, "onshore, as reported to 2022")
+    turb, vol = series("Siemens Gamesa", "Revenue - Turbines / New Units (€m)"), series("Siemens Gamesa", "WTG volume [MW]")
+    for y in turb.index.intersection(vol.index):
+        if vol[y] > 0:
+            add("Siemens Gamesa", int(y), "Revenue per delivered MW", turb[y] / vol[y], "new-unit revenue / WTG MW, onshore and offshore")
+    pooled("Siemens Gamesa", turb, vol.where(vol > 0), "new-unit revenue / WTG MW, onshore and offshore")
+
+    for item in inputs.get("suzlon") or []:
+        y = int(item["fy_end_year"])
+        # a March fiscal year covers nine months of the previous calendar year and three of the year it ends in
+        rate = 0.75 * fx["eur_inr"].get(y - 1, fx["eur_inr"].iloc[-1]) + 0.25 * fx["eur_inr"].get(y, fx["eur_inr"].iloc[-1]) if "Q1" not in item["label"] else fx["eur_inr"].get(y - 1, fx["eur_inr"].iloc[-1])
+        # FY2026 (Apr 2025-Mar 2026) is plotted at 2025 and Q1 FY27 (Apr-Jun 2026) at 2026
+        cal_year = y - 1
+        add("Suzlon", cal_year, "Revenue per delivered MW", item["revenue_cr"] * 10.0 / item["deliveries_mw"] / rate, "revenue incl. O&M / MW delivered", period=item["label"])
+    return pd.DataFrame(rows, columns=["oem", "year", "period", "basis", "eur_m_per_mw", "note"])

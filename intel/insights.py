@@ -251,8 +251,29 @@ def insight_freshness(b: Bundle) -> Insight | None:
         metric=f"{int(worst['days_stale'])} days", metric_label=f"{worst['oem']} list age", tone="warn" if len(stale) else "neutral", where="Data Quality")
 
 
+def insight_price(b: Bundle) -> Insight | None:
+    p = b.price
+    asp = p[p["basis"] == "Order-intake ASP"]
+    if asp.empty:
+        return None
+    last = asp.sort_values("year").groupby("oem").tail(1).sort_values("eur_m_per_mw", ascending=False)
+    v = last[last["oem"] == "Vestas"]
+    n = last[last["oem"] == "Nordex"]
+    gap = (float(n["eur_m_per_mw"].iloc[0]) / float(v["eur_m_per_mw"].iloc[0]) - 1) if len(v) and len(n) else np.nan
+    rev = p[(p["basis"] == "Revenue per delivered MW") & (p["oem"] == "Suzlon")].sort_values("year")
+    suz = f" Suzlon does not report a price; revenue per delivered MW (including O&M) is about EUR {rev['eur_m_per_mw'].iloc[-1]:.2f}m, roughly {abs(rev['eur_m_per_mw'].iloc[-1] / float(v['eur_m_per_mw'].iloc[0]) - 1):.0%} below Vestas' order price." if len(rev) and len(v) else ""
+    top = last.iloc[0]
+    return Insight(
+        key="price",
+        headline=(f"Turbine order prices (estimates): {', '.join(f'{r.oem} EUR {r.eur_m_per_mw:.2f}m/MW ({r.period})' for r in last.itertuples())}"),
+        detail=(f"Estimates based on the company-reported average selling price of new turbine orders. " + (f"Nordex's latest price is {pc(abs(gap))} {'below' if gap < 0 else 'above'} Vestas'. " if pd.notna(gap) else "")
+                + "Vestas includes offshore, which lifts its average; Siemens Gamesa's last reported price is onshore only and from 2022." + suz
+                + " GE does not disclose MW, so no price can be derived."),
+        metric=f"EUR {top['eur_m_per_mw']:.2f}m", metric_label=f"{top['oem']} price per MW", tone="neutral", where="Price per MW")
+
+
 INSIGHT_BUILDERS: list[Callable[[Bundle], Insight | None]] = [
-    insight_growth, insight_margin, insight_orders, insight_backlog, insight_momentum, insight_share, insight_coverage,
+    insight_growth, insight_margin, insight_orders, insight_price, insight_backlog, insight_momentum, insight_share, insight_coverage,
     insight_product, insight_battles, insight_concentration, insight_shared_customers, insight_freshness,
 ]
 

@@ -1,0 +1,19 @@
+{
+ "description": "Inputs for the EUR-per-MW comparison that are not in the parsed caches. Nordex ASP is the Projects-segment order-intake average selling price (EUR m per MW) from Nordex's results releases. Suzlon deliveries and revenue are from its results coverage (INR crore); fiscal years end in March.",
+ "retrieved": "2026-10-20",
+ "nordex_asp_eur_m_per_mw": {
+  "2022": 0.84, "2023": 0.84, "2024": 0.90, "2025": 0.91
+ },
+ "nordex_asp_note": "FY2022-2023 from the FY2023 release, FY2024-2025 from the FY2025 release. 2026 is derived: H1 2026 Projects order intake value EUR 4,683.1m over 4,923 MW (Q1 1,869 MW + Q2 3,054 MW) = 0.95; Nordex states Q2 2026 at EUR 0.97m per MW.",
+ "nordex_2026": {"label": "H1 2026", "value_eur_m": 4683.1, "mw": 4923, "q2_asp": 0.97},
+ "nordex_sources": [
+  "https://www.renewable-energy-industry.com/news/press-releases/pm-8731-nordex-group-closes-q4-with-36-gw-in-orders-setting-a-new-annual-order-intake-record-of-102-gw-in-2025",
+  "https://www.nordex-online.com/es/2026/07/nordex-group-achieves-double-digit-ebitda-margin-in-q2-2026-strong-order-intake-growth-and-positive-free-cash-flow/"
+ ],
+ "suzlon": [
+  {"label": "FY2026 (Apr 2025-Mar 2026)", "fy_end_year": 2026, "revenue_cr": 16679, "deliveries_mw": 2456},
+  {"label": "Q1 FY27 (Apr-Jun 2026)", "fy_end_year": 2027, "revenue_cr": 3819, "deliveries_mw": 506}
+ ],
+ "suzlon_note": "Revenue per delivered MW includes O&M and other revenue, so it overstates the turbine price. Converted at the average rate of the calendar years the period covers.",
+ "ge_note": "GE Vernova does not disclose onshore GW ordered or delivered in the sources used, so no price per MW can be derived."
+}

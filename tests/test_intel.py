@@ -147,6 +147,29 @@ def test_scoreboard(fx):
     assert sb["margin"].between(-1, 1).all()
 
 
+# ---------------------------------------------------------------- price per MW
+def test_price_table(economy, fx):
+    t = A.price_table(economy, fx)
+    assert set(t["basis"]) == {"Order-intake ASP", "Revenue per delivered MW", "Revenue per delivered MW (3-year pooled)"}
+    assert t["eur_m_per_mw"].between(0.4, 2.0).all()  # data sanity: a plausible EUR m/MW range
+    v = t[(t["oem"] == "Vestas") & (t["basis"] == "Order-intake ASP") & (t["year"] == 2025)]["eur_m_per_mw"].iloc[0]
+    raw = economy[(economy["oem"] == "Vestas") & (economy["metric"] == "average MW price [mEUR/MW]") & (economy["year"] == 2025)]["value"].iloc[0]
+    assert v == pytest.approx(raw)
+    # revenue per delivered MW = sales of projects / deliveries
+    e = economy[(economy["oem"] == "Vestas") & (economy["year"] == 2025)].set_index("metric")["value"]
+    r = t[(t["oem"] == "Vestas") & (t["basis"] == "Revenue per delivered MW") & (t["year"] == 2025)]["eur_m_per_mw"].iloc[0]
+    assert r == pytest.approx(e["sales of projects"] / e["deliveries [MW]"])
+    # the pooled value is the sum over three years, not the mean of annual ratios
+    ev = economy[(economy["oem"] == "Vestas") & economy["year"].between(2023, 2025)].pivot_table(index="year", columns="metric", values="value")
+    pooled = t[(t["oem"] == "Vestas") & (t["basis"] == "Revenue per delivered MW (3-year pooled)") & (t["year"] == 2025)]["eur_m_per_mw"].iloc[0]
+    assert pooled == pytest.approx(ev["sales of projects"].sum() / ev["deliveries [MW]"].sum())
+    assert "GE" not in set(t["oem"])  # GE does not disclose MW
+    n26 = t[(t["oem"] == "Nordex") & (t["year"] == 2026)]["eur_m_per_mw"].iloc[0]
+    assert n26 == pytest.approx(4683.1 / 4923)
+    s = t[t["oem"] == "Suzlon"].set_index("period")["eur_m_per_mw"]
+    assert s["FY2026 (Apr 2025-Mar 2026)"] == pytest.approx(16679 * 10 / 2456 / (0.75 * fx.loc[2025, "eur_inr"] + 0.25 * fx.loc[2026, "eur_inr"]))
+
+
 # ---------------------------------------------------------------- quality and insights
 def test_quality_table(orders, platforms, economy):
     q = A.quality_table(orders, platforms, economy, pd.Timestamp("2026-10-13")).set_index("oem")

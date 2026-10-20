@@ -9,6 +9,7 @@ Combined Streamlit dashboard comparing Vestas, Nordex, Siemens Gamesa, Suzlon an
 - `OEM Intelligence Lab` (new, choose a section at the top)
   - `Momentum & Share`: share of announced MW, last-12-month and year-to-date momentum per OEM, a like-for-like cut-off date, order size and mega-order dependence.
   - `Reported vs Announced`: how much of company-reported order intake (MW) each order list captures (Vestas, Nordex).
+  - `Price per MW` (new): rough EUR m per MW on two bases - company-reported order-intake price (Vestas, Nordex, Siemens Gamesa onshore to 2022) and revenue per delivered MW (Vestas, Nordex, Siemens Gamesa, Suzlon). GE does not disclose MW.
   - `Product Race`: average rotor and rating of ordered turbines, 150 m-plus rotor share, leading platforms.
   - `Market Battles`: largest markets with leader and runner-up, contested markets, continent mix, geographic concentration, country movers.
   - `Accounts`: customers that bought from more than one OEM, customer dependence.
@@ -36,6 +37,7 @@ Combined Streamlit dashboard comparing Vestas, Nordex, Siemens Gamesa, Suzlon an
 Cross-OEM intelligence data (tracked in `data/`):
 - `oem_latest_results.json`: latest reported quarter per OEM (company releases; sources listed per OEM).
 - `nordex_reported_intake.json`: Nordex reported Projects order intake in MW (quarterly and annual).
+- `price_inputs.json`: Nordex average selling price per MW (results releases) and Suzlon revenue and deliveries for the price comparison.
 - `fx_annual.json`: average EUR/USD and EUR/INR per calendar year (ECB reference rates via Frankfurter); the latest year is year to date.
 
 Primary cache files (included in this repo for deployment):
